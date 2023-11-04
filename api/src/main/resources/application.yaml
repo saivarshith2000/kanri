@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    open-in-view: false
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    hikari:
+      connectionTimeout: 5000
+      maximumPoolSize: 5
+    url: jdbc:postgresql://${PG_HOST}/${PG_DB_NAME}
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://securetoken.google.com/${FIREBASE_PROJECT_ID}
+          jwk-set-uri: https://www.googleapis.com/robot/v1/metadata/jwk/securetoken@system.gserviceaccount.com
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+kanri:
+  projects:
+    max_project_limit: 3
