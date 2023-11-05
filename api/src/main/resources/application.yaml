@@ -2,7 +2,6 @@ spring:
   jpa:
     open-in-view: false
     hibernate.ddl-auto: update
-    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
     hikari:
@@ -25,5 +24,5 @@ management:
       show-details: always
 
 kanri:
-  projects:
+  project:
     max_project_limit: 3

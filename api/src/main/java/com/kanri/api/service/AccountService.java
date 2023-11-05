@@ -18,12 +18,26 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper mapper;
 
+    /**
+     * Returns user details that exist in kanri database
+     * @param uid   Firebase UID of the user
+     * @return      Account details
+     */
     public AccountDTO getAccountByUid(String uid) {
         return mapper.toAccountDTO(accountRepository
                 .findByUid(uid)
                 .orElseThrow(() -> new NotFoundException("Account with UID " + uid + " not found")));
     }
 
+    /**
+     * Returns account details that are either newly created as a result of this request (or)
+     * details that already existed previously. This endpoint is expected to be called by the
+     * client on startup as there is no (simple) way to synchronize user records between kanri
+     * database and firebase's backend.
+     * @param uid   Firebase UID of the user
+     * @param email User's email address as registered in Firebase
+     * @return      Account details stored in the database
+     */
     public AccountDTO syncAccount(String uid, String email) {
         Optional<Account> accountInDb = accountRepository.findByUid(uid);
         if (accountInDb.isEmpty()) {

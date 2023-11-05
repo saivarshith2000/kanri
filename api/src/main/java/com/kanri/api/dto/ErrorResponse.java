@@ -15,8 +15,12 @@ public class ErrorResponse {
     private Instant timestamp;
 
     public ErrorResponse(HttpStatus status, String error) {
+        this(status, Map.of("msg", error));
+    }
+
+    public ErrorResponse(HttpStatus status, Map<String, String> errors) {
         this.timestamp = Instant.now();
         this.status = status.value();
-        this.errors = Map.of("msg", error);
+        this.errors = errors;
     }
 }
