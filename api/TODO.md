@@ -1,6 +1,6 @@
 ### TODO
 
-- [ ] Add tests for AccountService
+- [x] Add tests for AccountService
 - [ ] Add routes, service for user management in a project
 - [ ] Add tests for ProjectService
 - [ ] Add Issue entity and repository
