@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,14 +37,9 @@ public class AccountServiceTest {
     void getAccountByUid() {
         String uid = "test-uid-abc-123";
         String email = "testuser@test.com";
-        Account account = new Account();
-        account.setUid(uid);
-        account.setEmail(email);
-
+        Account account = new Account(uid, email);
         when(accountRepository.findByUid(uid)).thenReturn(Optional.of(account));
-
         AccountDTO dto = accountService.getAccountByUid(uid);
-
         assertThat(dto.getUid()).isEqualTo(uid);
         assertThat(dto.getEmail()).isEqualTo(email);
     }
@@ -52,9 +48,7 @@ public class AccountServiceTest {
     @DisplayName("Throw NotFoundException is UID doesn't exist")
     void throwIfUidDoesntExist() {
         String uid = "invalid-uid";
-
         when(accountRepository.findByUid(uid)).thenReturn(Optional.empty());
-
         Exception exception = assertThrows(NotFoundException.class, () -> {
             AccountDTO dto = accountService.getAccountByUid(uid);
         });
@@ -65,14 +59,9 @@ public class AccountServiceTest {
     void syncAccountForExistingAccount() {
         String uid = "test-uid-abc-123";
         String email = "testuser@test.com";
-        Account account = new Account();
-        account.setUid(uid);
-        account.setEmail(email);
-
+        Account account = new Account(uid, email);
         when(accountRepository.findByUid(uid)).thenReturn(Optional.of(account));
-
         AccountDTO dto = accountService.syncAccount(uid, email);
-
         assertThat(dto.getUid()).isEqualTo(uid);
         assertThat(dto.getEmail()).isEqualTo(email);
     }
@@ -82,16 +71,23 @@ public class AccountServiceTest {
     void syncAccountForNewAccount() {
         String uid = "test-uid-abc-123";
         String email = "testuser@test.com";
-        Account account = new Account();
-        account.setUid(uid);
-        account.setEmail(email);
-
+        Account account = new Account(uid, email);
         when(accountRepository.findByUid(uid)).thenReturn(Optional.empty());
         when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
-
         AccountDTO dto = accountService.syncAccount(uid, email);
-
         assertThat(dto.getUid()).isEqualTo(uid);
         assertThat(dto.getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    @DisplayName("Get List of user accounts with email search string")
+    void getAccountsWithEmailSearchString() {
+        Account account = new Account("uid-test-a", "testa@testmail.com");
+        String emailSearch = "testa";
+        when(accountRepository.findByEmailContainingIgnoreCase(emailSearch)).thenReturn(List.of(account));
+        List<AccountDTO> accounts = accountService.searchByEmail(emailSearch);
+        assertThat(accounts.size()).isEqualTo(1);
+        assertThat(accounts.get(0).getEmail()).isEqualTo(account.getEmail());
+        assertThat(accounts.get(0).getUid()).isEqualTo(account.getUid());
     }
 }

@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -46,5 +48,17 @@ public class AccountService {
             return mapper.toAccountDTO(account);
         }
         return mapper.toAccountDTO(accountInDb.get());
+    }
+
+    /**
+     * Returns a list of AccountDTOs with emails matching the provider seach string
+     * @param emailSearch String used to search accounts based on their email
+     * @return A list of accountDTO with matching email ids
+     */
+    public List<AccountDTO> searchByEmail(String emailSearch) {
+        return accountRepository.findByEmailContainingIgnoreCase(emailSearch)
+                .stream()
+                .map(mapper::toAccountDTO)
+                .collect(Collectors.toList());
     }
 }

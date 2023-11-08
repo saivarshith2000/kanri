@@ -6,10 +6,9 @@ import com.kanri.api.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -27,5 +26,10 @@ public class AccountController {
         String uid = jwt.getSubject();
         String email = jwt.getClaimAsString("email");
         return accountService.syncAccount(uid, email);
+    }
+
+    @GetMapping("/search")
+    public List<AccountDTO> searchAccountsByEmail(@RequestParam(name = "email") String emailSearchString) {
+        return accountService.searchByEmail(emailSearchString);
     }
 }
