@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "project")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Project extends BaseEntity {
     @NonNull
