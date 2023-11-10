@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Data
 @AllArgsConstructor
-public class ProjectAccountResponse {
+public class MyProjectListItemResponse {
     private String name;
 
     private String code;

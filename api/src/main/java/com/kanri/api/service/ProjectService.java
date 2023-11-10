@@ -1,23 +1,22 @@
 package com.kanri.api.service;
 
 import com.kanri.api.dto.project.CreateProjectRequest;
-import com.kanri.api.dto.project.ProjectAccountResponse;
+import com.kanri.api.dto.project.MyProjectListItemResponse;
 import com.kanri.api.dto.project.ProjectDTO;
 import com.kanri.api.entity.Account;
 import com.kanri.api.entity.Project;
-import com.kanri.api.entity.ProjectAccount;
+import com.kanri.api.entity.RoleAssignment;
 import com.kanri.api.entity.Role;
 import com.kanri.api.exception.BadRequestException;
 import com.kanri.api.exception.ForbiddenException;
 import com.kanri.api.exception.NotFoundException;
 import com.kanri.api.mapper.ProjectMapper;
 import com.kanri.api.repository.AccountRepository;
-import com.kanri.api.repository.ProjectAccountRepository;
+import com.kanri.api.repository.RoleAssignmentRepository;
 import com.kanri.api.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ import java.util.List;
 public class ProjectService {
     private final AccountRepository accountRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectAccountRepository projectAccountRepository;
+    private final RoleAssignmentRepository roleAssignmentRepository;
     private final ProjectMapper projectMapper;
 
     @Value("${kanri.project.max_project_limit}")
@@ -40,8 +39,8 @@ public class ProjectService {
      * @param uid - Firebase UID of the user
      * @return      List of projects (along with the user's role) where user has a role
      */
-    public List<ProjectAccountResponse> getProjectsByUser(String uid) {
-        return projectAccountRepository.getProjectsByUid(uid);
+    public List<MyProjectListItemResponse> getProjectsByUser(String uid) {
+        return roleAssignmentRepository.getProjectsByUid(uid);
     }
 
     /**
@@ -61,8 +60,8 @@ public class ProjectService {
         project.setDescription(dto.getDescription());
         try {
             Project saved = projectRepository.save(project);
-            ProjectAccount projectAccount = new ProjectAccount(owner, saved, Role.OWNER);
-            projectAccountRepository.save(projectAccount);
+            RoleAssignment roleAssignment = new RoleAssignment(owner, saved, Role.OWNER);
+            roleAssignmentRepository.save(roleAssignment);
             log.info("Created a new project " + dto.getName() + " with code " + dto.getCode() + " owned by " + ownerUid);
             return projectMapper.toProjectDTO(saved);
         } catch (DataIntegrityViolationException ex) {
@@ -76,7 +75,7 @@ public class ProjectService {
      * @param uid Firebase UID of the user
      */
     private void throwIfProjectLimitReached(String uid) {
-        int projectsOwnedByUser = projectAccountRepository.countProjectsOwnedByUid(uid);
+        int projectsOwnedByUser = roleAssignmentRepository.countProjectsOwnedByUid(uid);
         if (projectsOwnedByUser >= maxProjectLimit) {
             throw new ForbiddenException("You have reached the limit your project limit.");
         }

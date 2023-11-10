@@ -26,5 +26,5 @@ public class Account extends BaseEntity {
     private String email;
 
     @OneToMany(mappedBy = "account")
-    List<ProjectAccount> projectAccounts = new ArrayList<>();
+    List<RoleAssignment> roleAssignments = new ArrayList<>();
 }

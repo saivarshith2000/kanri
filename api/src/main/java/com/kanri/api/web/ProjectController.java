@@ -1,15 +1,13 @@
 package com.kanri.api.web;
 
 import com.kanri.api.dto.project.CreateProjectRequest;
-import com.kanri.api.dto.project.ProjectAccountResponse;
+import com.kanri.api.dto.project.MyProjectListItemResponse;
 import com.kanri.api.dto.project.ProjectDTO;
 import com.kanri.api.service.ProjectService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/")
-    public List<ProjectAccountResponse> getMyProjects(@AuthenticationPrincipal Jwt jwt) {
+    public List<MyProjectListItemResponse> getMyProjects(@AuthenticationPrincipal Jwt jwt) {
         String uid = jwt.getSubject();
         return projectService.getProjectsByUser(uid);
     }

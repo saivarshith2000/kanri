@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "project_account")
+@Table(name = "role_assignment",
+    uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"account_id", "project_id", "role"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectAccount extends BaseEntity {
+public class RoleAssignment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
