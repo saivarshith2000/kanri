@@ -1,5 +1,6 @@
 package com.kanri.api.web;
 
+import com.kanri.api.annotation.ProjectExists;
 import com.kanri.api.dto.project.RoleAssignmentRequest;
 import com.kanri.api.dto.project.RoleAssignmentResponse;
 import com.kanri.api.service.RoleManagementService;
@@ -26,7 +27,8 @@ public class RoleManagementController {
             @AuthenticationPrincipal Jwt jwt,
             @Valid
             @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
-            @PathVariable String projectCode
+            @PathVariable
+            String projectCode
     ) {
         return roleManagementService.getUsersInProject(jwt.getSubject(), projectCode);
     }
@@ -36,7 +38,8 @@ public class RoleManagementController {
             @AuthenticationPrincipal Jwt jwt,
             @Valid
             @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
-            @PathVariable String projectCode,
+            @PathVariable
+            String projectCode,
             @Valid @RequestBody RoleAssignmentRequest dto
             ) {
         return roleManagementService.addUserToProject(jwt.getSubject(), projectCode, dto);
