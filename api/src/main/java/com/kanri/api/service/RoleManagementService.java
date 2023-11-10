@@ -28,6 +28,11 @@ public class RoleManagementService {
     private final ProjectRepository projectRepository;
     private final RoleAssignmentRepository roleAssignmentRepository;
 
+    /**
+     * @param initiatorUid Firebase UID of the request's initator
+     * @param projectCode  Kanri project code
+     * @return  A list of role assignments in the project
+     */
     public List<RoleAssignmentResponse> getUsersInProject(String initiatorUid, String projectCode) {
         Project project = getProjectByCode(projectCode);
         Account initiator = getAccountByUid(initiatorUid);
@@ -37,6 +42,12 @@ public class RoleManagementService {
         return roleAssignmentRepository.findByProjectCode(projectCode);
     }
 
+    /**
+     * @param initiatorUid  Firebase UID of the request's initator
+     * @param projectCode   Kanri project code
+     * @param dto           Request body containing target user's UID and role
+     * @return              The created RoleAssignment
+     */
     @Transactional
     public RoleAssignmentResponse addUserToProject(String initiatorUid, String projectCode, RoleAssignmentRequest dto) {
         RoleAssignment initiatorMapping = roleAssignmentRepository
@@ -63,6 +74,12 @@ public class RoleManagementService {
         return new RoleAssignmentResponse(user.getUid(), user.getEmail(), projectCode, saved.getRole());
     }
 
+    /**
+     * @param initiatorUid  Firebase UID of the request's initator
+     * @param projectCode   Kanri project code
+     * @param dto           Request body containing target user's UID and role
+     * @return              The target's RoleAssignment after modification
+     */
     @Transactional
     public RoleAssignmentResponse modifyUserRoleInProject(String initiatorUid, String projectCode, RoleAssignmentRequest dto) {
         RoleAssignment initiatorMapping = roleAssignmentRepository
