@@ -25,23 +25,22 @@ public class AccountExistsFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(
-            @NonNull HttpServletRequest servletRequest,
-            @NonNull HttpServletResponse servletResponse,
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws IOException, ServletException {
-
-        String path = servletRequest.getServletPath();
+        String path = request.getServletPath();
         if (path.equals("/api/accounts/sync")) {
             // Do not invoke this filter for account sync path
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Account> account = accountRepository.findByUid(jwt.getSubject());
         if (account.isPresent()) {
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
-        servletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        servletResponse.getOutputStream().print("An account with UID " + jwt.getSubject() + " doesn't exist");
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.getOutputStream().print("An account with UID " + jwt.getSubject() + " doesn't exist");
     }
 }
