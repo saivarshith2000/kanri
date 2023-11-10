@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Project extends BaseEntity {
     @NonNull
     private String name;
@@ -26,6 +27,10 @@ public class Project extends BaseEntity {
     @NonNull
     private String description;
 
+
     @OneToMany(mappedBy = "project")
     List<RoleAssignment> roleAssignments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    List<Issue> issues = new ArrayList<>();
 }

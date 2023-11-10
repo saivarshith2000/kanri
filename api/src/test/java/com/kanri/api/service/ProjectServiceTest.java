@@ -58,7 +58,7 @@ class ProjectServiceTest {
     void createProject() {
         Account account = new Account("test-1", "test1@test.com");
         CreateProjectRequest request = new CreateProjectRequest("TP-A", "TESTA", "Desc");
-        Project project = new Project(request.getName(), request.getCode(), request.getDescription(), null);
+        Project project = new Project(request.getName(), request.getCode(), request.getDescription());
 
         when(roleAssignmentRepository.countProjectsOwnedByUid(any())).thenReturn(0);
         when(accountRepository.findByUid(account.getUid())).thenReturn(Optional.of(account));

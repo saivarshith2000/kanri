@@ -44,7 +44,7 @@ class RoleManagementServiceTest {
     // Common across tests
     private final Account initiator = new Account("initiator-uid", "initiator@test.com");
     private final Account user = new Account("user-uid", "user@test.com");
-    private final Project project = new Project("TEST", "TEST", "DESC", null);
+    private final Project project = new Project("TEST", "TEST", "DESC");
 
     @Test
     @DisplayName("Get users and their permissions in a project when initator isnt't assigned to the project ")
