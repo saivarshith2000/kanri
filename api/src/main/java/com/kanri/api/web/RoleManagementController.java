@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/api/projects")
 @Validated
 @RequiredArgsConstructor
 public class RoleManagementController {
     private final RoleManagementService roleManagementService;
 
-    @GetMapping("/project/{projectCode}")
+    @GetMapping("/{projectCode}/users")
     public List<RoleAssignmentResponse> getUsersInProject(
             @AuthenticationPrincipal Jwt jwt,
             @Valid
@@ -33,7 +33,7 @@ public class RoleManagementController {
         return roleManagementService.getUsersInProject(jwt.getSubject(), projectCode);
     }
 
-    @PostMapping("/project/{projectCode}")
+    @PostMapping("{projectCode}/users")
     public RoleAssignmentResponse addUserToProject(
             @AuthenticationPrincipal Jwt jwt,
             @Valid
@@ -45,7 +45,7 @@ public class RoleManagementController {
         return roleManagementService.addUserToProject(jwt.getSubject(), projectCode, dto);
     }
 
-    @PutMapping("/project/{projectCode}")
+    @PutMapping("{projectCode}/users")
     public RoleAssignmentResponse modifyUserRoleInProject(
             @AuthenticationPrincipal Jwt jwt,
             @Valid
@@ -56,7 +56,7 @@ public class RoleManagementController {
         return roleManagementService.modifyUserRoleInProject(jwt.getSubject(), projectCode, dto);
     }
 
-    @DeleteMapping("/project/{projectCode}")
+    @DeleteMapping("{projectCode}/users")
     public ResponseEntity<?> removeUserFromProject(
             @AuthenticationPrincipal Jwt jwt,
             @Valid

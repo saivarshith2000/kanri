@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "issue",
     uniqueConstraints = {
@@ -15,7 +17,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Issue {
+public class Issue extends BaseEntity {
     private String summary;
 
     private String description;
@@ -35,6 +37,10 @@ public class Issue {
     private IssueType type;
 
     @ManyToOne
+    @JoinColumn(name = "epic_id")
+    private Issue epic;
+
+    @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
@@ -45,4 +51,7 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private Account assignee;
+
+    @OneToMany
+    private List<Issue> children;
 }

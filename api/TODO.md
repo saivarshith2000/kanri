@@ -6,9 +6,10 @@
 - [x] Add tests for Role Assignment Service
 - [x] Add tests and implement Role Assignment Deletion
 - [x] Add filter/aspect to check project and initiator account exists
-- [ ] Add Issue entity and repository
+- [x] Add Issue entity and repository
 - [ ] Create Issue Service
 - [ ] Add tests for Issue Service
+- [ ] Add First and Last names from firebase to Account entity
 - [ ] Implement checks to ensure that a project doesn't end up without an owner in MODIFY and DELETE flows
 - [ ] Add Comments entity and its related objects
 - [ ] Add tests for JPA layer
