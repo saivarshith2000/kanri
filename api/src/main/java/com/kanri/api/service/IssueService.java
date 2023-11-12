@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class IssueService {
@@ -27,13 +30,13 @@ public class IssueService {
 
     public IssueResponse getIssueByCode(String initiatorUid, String projectCode, String issueCode) {
         throwOnInsufficientUserPermissions(initiatorUid, projectCode);
-        IssueResponseProjection projection = issueRepository.findIssueProjectionByCode(issueCode).orElseThrow(() -> new NotFoundException("Issue " + issueCode + " not found"));
-        System.out.println(projection);
-        System.out.println(projection.toString());
+        IssueResponseProjection projection = issueRepository.findIssueByCode(issueCode).orElseThrow(() -> new NotFoundException("Issue " + issueCode + " not found"));
         return mapper.projectionToIssueResponse(projection);
     }
 
-    public void getIssuesInProject() {
+    public List<IssueResponse> getIssuesInProject(String initiatorUid, String projectCode) {
+        throwOnInsufficientUserPermissions(initiatorUid, projectCode);
+        return issueRepository.findIssuesByProjectCode(projectCode).stream().map(mapper::projectionToIssueResponse).collect(Collectors.toList());
     }
 
     @Transactional
@@ -47,7 +50,9 @@ public class IssueService {
             issue.setEpic(issueRepository.findByCode(dto.getEpicCode()).orElseThrow(() -> new NotFoundException("EPIC " + dto.getEpicCode() + " not found")));
         }
         if (dto.getAssigneeEmail() != null) {
-            issue.setAssignee(findAccountByEmail(dto.getAssigneeEmail()));
+            Account assignee = findAccountByEmail(dto.getAssigneeEmail());
+            issue.setAssignee(assignee);
+            throwOnInsufficientUserPermissions(assignee.getUid(), projectCode);
         }
         issue.setSummary(dto.getSummary());
         issue.setDescription(dto.getDescription());
@@ -64,12 +69,8 @@ public class IssueService {
         return response;
     }
 
-    public Object updateIssue(Object dto) {
-        return new Object();
-    }
-
-    private void throwOnInsufficientUserPermissions(String reporterUid, String projectCode) {
-        roleAssignmentRepository.findByUidAndProjectCode(reporterUid, projectCode).orElseThrow(() -> new ForbiddenException("Insufficient permissions"));
+    private void throwOnInsufficientUserPermissions(String userUid, String projectCode) {
+        roleAssignmentRepository.findByUidAndProjectCode(userUid, projectCode).orElseThrow(() -> new ForbiddenException("Insufficient permissions"));
     }
 
     private Account findAccountByUid(String uid) {

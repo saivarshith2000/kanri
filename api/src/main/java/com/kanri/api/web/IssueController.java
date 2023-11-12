@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/projects")
 @Validated
@@ -30,6 +32,18 @@ public class IssueController {
     ) {
         return issueService.getIssueByCode(jwt.getSubject(), projectCode, issueCode);
     }
+
+    @GetMapping("/{projectCode}/issues")
+    public List<IssueResponse> getIssuesInProject(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid
+            @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
+            @PathVariable
+            String projectCode
+    ) {
+        return issueService.getIssuesInProject(jwt.getSubject(), projectCode);
+    }
+
     @PostMapping("/{projectCode}/issues")
     public IssueResponse createIssue(
             @AuthenticationPrincipal Jwt jwt,

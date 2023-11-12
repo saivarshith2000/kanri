@@ -6,10 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     @Query("SELECT i FROM Issue i where i.code = :issueCode")
-    Optional<IssueResponseProjection> findIssueProjectionByCode(@Param("issueCode") String issueCode);
+    Optional<IssueResponseProjection> findIssueByCode(@Param("issueCode") String issueCode);
+
+    @Query("SELECT i FROM Issue i where i.project.code = :projectCode")
+    List<IssueResponseProjection> findIssuesByProjectCode(@Param("projectCode") String projectCode);
+
     Optional<Issue> findByCode(String issueCode);
 }
