@@ -28,6 +28,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -156,18 +158,56 @@ public class IssueServiceTest {
         Exception exception = assertThrows(NotFoundException.class, () -> {
             issueService.createIssue(reporter.getUid(), project.getCode(), createIssueRequest);
         });
-        System.out.println(exception.getMessage());
         assertThat(exception.getMessage().contains("EPIC")).isTrue();
     }
 
     @Test
     @DisplayName("Create a new EPIC in project")
     void createNewEpic() {
+        when(projectRepository.findByCode(project.getCode())).thenReturn(Optional.of(project));
+        when(issueRepository.count()).thenReturn(0L);
+        when(issueRepository.save(any())).then(returnsFirstArg());
+        when(accountRepository.findByUid(reporter.getUid())).thenReturn(Optional.of(reporter));
+        when(accountRepository.findByEmail(assignee.getEmail())).thenReturn(Optional.of(assignee));
+        when(roleAssignmentRepository.findByUidAndProjectCode(reporter.getUid(), project.getCode())).thenReturn(Optional.of(reporterRA));
+        when(roleAssignmentRepository.findByUidAndProjectCode(assignee.getUid(), project.getCode())).thenReturn(Optional.of(assigneeRA));
+
+        CreateIssueRequest request = new CreateIssueRequest(
+                "Test Epic",
+                "Test Ppic Description",
+                20.0,
+                null,
+                Priority.MEDIUM,
+                IssueType.EPIC,
+                assignee.getEmail()
+        );
+
+        IssueResponse dto = issueService.createIssue(reporter.getUid(), project.getCode(), request);
+
+        assertThat(dto.getAssigneeEmail()).isEqualTo(assignee.getEmail());
+        assertThat(dto.getReporterEmail()).isEqualTo(reporter.getEmail());
+        assertThat(dto.getCode()).isEqualTo(String.format("%s-%d", project.getCode(), 1L));
+        assertThat(dto.getType()).isEqualTo(IssueType.EPIC);
     }
 
     @Test
     @DisplayName("Create a new non-EPIC issue in project")
     void createNewIssue() {
+        when(projectRepository.findByCode(project.getCode())).thenReturn(Optional.of(project));
+        when(issueRepository.count()).thenReturn(0L);
+        when(issueRepository.save(any())).then(returnsFirstArg());
+        when(issueRepository.findByCode(createIssueRequest.getEpicCode())).thenReturn(Optional.of(testEpic));
+        when(accountRepository.findByUid(reporter.getUid())).thenReturn(Optional.of(reporter));
+        when(accountRepository.findByEmail(assignee.getEmail())).thenReturn(Optional.of(assignee));
+        when(roleAssignmentRepository.findByUidAndProjectCode(reporter.getUid(), project.getCode())).thenReturn(Optional.of(reporterRA));
+        when(roleAssignmentRepository.findByUidAndProjectCode(assignee.getUid(), project.getCode())).thenReturn(Optional.of(assigneeRA));
+
+        IssueResponse dto = issueService.createIssue(reporter.getUid(), project.getCode(), createIssueRequest);
+
+        assertThat(dto.getAssigneeEmail()).isEqualTo(assignee.getEmail());
+        assertThat(dto.getReporterEmail()).isEqualTo(reporter.getEmail());
+        assertThat(dto.getCode()).isEqualTo(String.format("%s-%d", project.getCode(), 1L));
+        assertThat(dto.getType()).isEqualTo(createIssueRequest.getType());
     }
 
     @Getter
