@@ -13,29 +13,27 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * This aspect is used in controllers which use project code in their routes
+ * but don't necessarily use it in their business logic. Such Controllers should be
+ * annotated with the @ProjectExists annotation and the project code parameter in
+ * their routes should also be annotated with @ProjectExists.
+ */
 @Aspect
 @Component
-//@RequiredArgsConstructor
-@Slf4j
+@RequiredArgsConstructor
 public class CheckProjectExistsAspect {
     private final ProjectRepository projectRepository;
-
-    public CheckProjectExistsAspect(ProjectRepository projectRepository){
-        this.projectRepository = projectRepository;
-        log.info("Initialized");
-    }
 
     @Before("@annotation(com.kanri.api.annotation.ProjectExists)")
     public void process(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Object[] args = joinPoint.getArgs();
         Annotation[][] annotationMatrix = signature.getMethod().getParameterAnnotations();
-        log.info("Aspect called");
         for (int i = 0; i < annotationMatrix.length; i++) {
             Annotation[] annotations = annotationMatrix[i];
             for (Annotation annotation: annotations) {
                 if (annotation.annotationType() == ProjectExists.class) {
-                    log.info("Called for project " + (String) args[i]);
                     throwIfProjectDoesNotExist((String)args[i]);
                 }
             }
