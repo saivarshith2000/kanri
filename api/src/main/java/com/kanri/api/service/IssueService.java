@@ -4,6 +4,7 @@ import com.kanri.api.dto.issue.CreateIssueRequest;
 import com.kanri.api.dto.issue.IssueRequestDTO;
 import com.kanri.api.dto.issue.IssueResponse;
 import com.kanri.api.entity.*;
+import com.kanri.api.exception.BadRequestException;
 import com.kanri.api.exception.ForbiddenException;
 import com.kanri.api.exception.NotFoundException;
 import com.kanri.api.mapper.IssueMapper;
@@ -51,8 +52,8 @@ public class IssueService {
         }
         if (dto.getAssigneeEmail() != null) {
             Account assignee = findAccountByEmail(dto.getAssigneeEmail());
+            checkIfAssigneeInProject(assignee.getUid(), projectCode);
             issue.setAssignee(assignee);
-            throwOnInsufficientUserPermissions(assignee.getUid(), projectCode);
         }
         issue.setSummary(dto.getSummary());
         issue.setDescription(dto.getDescription());
@@ -71,6 +72,12 @@ public class IssueService {
 
     private void throwOnInsufficientUserPermissions(String userUid, String projectCode) {
         roleAssignmentRepository.findByUidAndProjectCode(userUid, projectCode).orElseThrow(() -> new ForbiddenException("Insufficient permissions"));
+    }
+
+    private void checkIfAssigneeInProject(String assigneeUid, String projectCode) {
+        roleAssignmentRepository
+                .findByUidAndProjectCode(assigneeUid, projectCode)
+                .orElseThrow(() -> new BadRequestException("Assignee doesn't have a role assigned in the project"));
     }
 
     private Account findAccountByUid(String uid) {

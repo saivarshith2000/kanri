@@ -8,7 +8,9 @@
 - [x] Add filter/aspect to check project and initiator account exists
 - [x] Add Issue entity and repository
 - [x] Create Issue Service
+- [x] Fix error handling when assignee is not part of project in issueService
 - [ ] Add tests for Issue Service
+- [ ] Add cases for edit/update issue in issue service and controller
 - [ ] Add First and Last names from firebase to Account entity
 - [ ] Implement checks to ensure that a project doesn't end up without an owner in MODIFY and DELETE flows
 - [ ] Add Work Log entity and its related objects
