@@ -15,6 +15,8 @@ public interface IssueResponseProjection {
     Priority getPriority();
     Status getStatus();
     IssueType getType();
+    @Value("#{target.epic == null ? 'NONE' : target.epic.code}")
+    String getEpicCode();
     @Value("#{target.project.code}")
     String getProjectCode();
     @Value("#{target.reporter.email}")

@@ -3,6 +3,7 @@ package com.kanri.api.service;
 import com.kanri.api.dto.issue.CreateIssueRequest;
 import com.kanri.api.dto.issue.IssueResponse;
 import com.kanri.api.entity.*;
+import com.kanri.api.exception.BadRequestException;
 import com.kanri.api.exception.ForbiddenException;
 import com.kanri.api.exception.NotFoundException;
 import com.kanri.api.mapper.IssueMapper;
@@ -60,6 +61,7 @@ public class IssueServiceTest {
             "test issue",
             "test description",
             "TESTP-2",
+            "TEST-EPIC",
             2.0,
             Priority.MEDIUM,
             Status.OPEN,
@@ -80,7 +82,9 @@ public class IssueServiceTest {
             null,
             project,
             reporter,
-            assignee, null);
+            assignee,
+            null,
+            null);
     private final CreateIssueRequest createIssueRequest = new CreateIssueRequest(
             "test issue",
             "test description",
@@ -142,7 +146,7 @@ public class IssueServiceTest {
         when(accountRepository.findByEmail(assignee.getEmail())).thenReturn(Optional.of(assignee));
         when(projectRepository.findByCode(project.getCode())).thenReturn(Optional.of(project));
 
-        Exception exception = assertThrows(ForbiddenException.class, () -> {
+        Exception exception = assertThrows(BadRequestException.class, () -> {
             issueService.createIssue(reporter.getUid(), project.getCode(), createIssueRequest);
         });
         System.out.println(exception.getMessage());
@@ -217,6 +221,7 @@ public class IssueServiceTest {
         private final String summary;
         private final String description;
         private final String code;
+        private final String epicCode;
         private final Double storyPoints;
         private final Priority priority;
         private final Status status;
