@@ -56,6 +56,7 @@ function CreateProjectForm({ onSuccess }: { onSuccess: () => void }) {
       form.reset();
     } catch (err) {
       if (isApiError(err)) {
+        console.log(err.data.timestamp);
         toast.error(err.data.errors.msg);
       } else {
         toast.error(

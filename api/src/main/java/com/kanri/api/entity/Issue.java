@@ -57,4 +57,7 @@ public class Issue extends BaseEntity {
 
     @OneToMany
     private List<WorkLog> workLogs;
+
+    @OneToMany
+    private List<Attachment> attachments;
 }

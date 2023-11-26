@@ -35,8 +35,7 @@ public class AccountExistsFilter extends OncePerRequestFilter {
             return;
         }
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Account> account = accountRepository.findByUid(jwt.getSubject());
-        if (account.isPresent()) {
+        if (accountRepository.existsByUid(jwt.getSubject())) {
             filterChain.doFilter(request, response);
             return;
         }

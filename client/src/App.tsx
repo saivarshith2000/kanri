@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicRoute } from "./components/PublicRoute";
 import { FirebaseAuthWrapper } from "./components/FirebaseAuthWrapper";
+import IssueRoutes from "./features/issues/Routes";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route element={<FirebaseAuthWrapper />}>
             <Route element={<PublicRoute />}>{AuthRoutes()}</Route>
             <Route element={<ProtectedRoute />}>{ProjectRoutes()}</Route>
+            <Route element={<ProtectedRoute />}>{IssueRoutes()}</Route>
             <Route path="*" element={<ErrorPage />} />
           </Route>
         </Routes>

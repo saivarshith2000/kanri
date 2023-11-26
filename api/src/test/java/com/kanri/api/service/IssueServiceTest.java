@@ -83,8 +83,7 @@ public class IssueServiceTest {
             project,
             reporter,
             assignee,
-            null,
-            null);
+            null, null, null);
     private final CreateIssueRequest createIssueRequest = new CreateIssueRequest(
             "test issue",
             "test description",
