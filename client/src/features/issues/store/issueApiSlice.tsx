@@ -1,17 +1,23 @@
 import { apiSlice } from "@/store/apiSlice";
 
 export type Issue = {
-  name: string;
+  summary: string;
   code: string;
+  status: string;
+  priority: string;
+  type: string;
   description: string;
-  role: string;
 };
 
 export type CreateIssuePayload = {
   projectCode: string;
-  name: string;
-  code: string;
+  summary: string;
   description: string;
+  type: "EPIC" | "DEFECT" | "STORY" | "TASK" | "SPIKE";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "BLOCKER";
+  story_points: number;
+  epicCode: "TESTA-1";
+  assigneeEmail: "user1@dev.com";
 };
 
 const extendedApi = apiSlice
@@ -28,7 +34,7 @@ const extendedApi = apiSlice
       }),
       createIssue: builder.mutation<Issue, CreateIssuePayload>({
         query: (body) => ({
-          url: "/api/projects/<PROJECT-CODE>/issues",
+          url: `/api/projects/${body.projectCode}/issues`,
           method: "POST",
           body,
         }),

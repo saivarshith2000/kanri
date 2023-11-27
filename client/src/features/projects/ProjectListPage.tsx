@@ -41,7 +41,7 @@ function RoleBadge({ role }: { role: string }) {
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <Link to={`/${project.code}/issues`}>
+    <Link to={`/project/${project.code}/issues`}>
       <div className="p-4 rounded-md shadow-sm bg-white hover:shadow-md flex flex-col gap-2 justify-start hover:cursor-pointer w-[250px]">
         <p className="text-2xl truncate">{project.name}</p>
         <p className="font-bold">{project.code}</p>

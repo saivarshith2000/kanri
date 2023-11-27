@@ -24,10 +24,6 @@ import { Button } from "@/shadcnui/ui/button";
 import { Textarea } from "@/shadcnui/ui/textarea";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import {
-  FetchBaseQueryError,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/dist/query/react";
 import { isApiError } from "@/store/apiError";
 
 const schema = z.object({
