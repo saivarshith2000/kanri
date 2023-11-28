@@ -4,8 +4,15 @@ import ErrorPage from "@/ErrorPage";
 import { Spinner } from "@/components/Spinner";
 import { toast } from "react-toastify";
 import { CreateIssueDialog } from "./components/CreateIssueDialog";
+import IssueListItem from "./components/IssueListItem";
 
-function IssueList({ issues }: { issues: Issue[] }) {
+function IssueList({
+  issues,
+  projectCode,
+}: {
+  issues: Issue[];
+  projectCode: string;
+}) {
   if (issues.length === 0) {
     return (
       <div className="text-gray-600 text-2xl text-center w-[400px] m-auto mt-16">
@@ -14,24 +21,9 @@ function IssueList({ issues }: { issues: Issue[] }) {
     );
   }
   return (
-    <div>
+    <div className="mb-1">
       {issues.map((i) => (
-        <div className="m-2 p-2 px-4 shadow-md flex flex-row justify-between bg-white rounded-md">
-          <div className="flex flex-row gap-2">
-            <p className="text-sm font-bold">{i.type}</p>
-            <a
-              className="text-sm"
-              href="/project/<PROJECT-CODE>/issues/<ISSUE-CODE>"
-            >
-              {i.code}
-            </a>
-            <p className="text-sm">{i.summary}</p>
-          </div>
-          <div className="flex flex-row gap-2">
-            <p className="text-sm font-bold">{i.priority}</p>
-            <p className="text-sm font-bold">{i.status}</p>
-          </div>
-        </div>
+        <IssueListItem issue={i} projectCode={projectCode} key={i.code} />
       ))}
     </div>
   );
@@ -46,7 +38,7 @@ export function IssueListPage() {
   if (isLoading) {
     return <Spinner text="Loading Issues..." />;
   } else if (error) {
-    toast.error("An error occured while fetching your projects");
+    toast.error("An error occured while fetching issues");
   } else {
     return (
       <div className="flex flex-col w-4/5 m-auto my-4">
@@ -55,9 +47,14 @@ export function IssueListPage() {
           <CreateIssueDialog projectCode={projectCode} />
         </div>
         {data?.length === 0 ? (
-          <div>You don't have any issues yet. Start by creating an EPIC</div>
+          <p className="text-4xl text-gray-600 my-4 text-center">
+            You don't have any issues yet. <br />
+            Start by creating an EPIC
+          </p>
         ) : (
-          <IssueList issues={data!} />
+          <div className="my-4">
+            <IssueList issues={data!} projectCode={projectCode} />
+          </div>
         )}
       </div>
     );

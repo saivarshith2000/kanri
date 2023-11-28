@@ -3,10 +3,11 @@ import { apiSlice } from "@/store/apiSlice";
 export type Issue = {
   summary: string;
   code: string;
-  status: string;
-  priority: string;
-  type: string;
+  status: "OPEN" | "INPROGRESS" | "CLOSED" | "REJECTED";
+  type: "EPIC" | "DEFECT" | "STORY" | "TASK" | "SPIKE";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "BLOCKER";
   description: string;
+  story_points: number;
 };
 
 export type CreateIssuePayload = {
@@ -20,6 +21,11 @@ export type CreateIssuePayload = {
   assigneeEmail: "user1@dev.com";
 };
 
+type getIssueByCodeParams = {
+  projectCode: string;
+  issueCode: string;
+};
+
 const extendedApi = apiSlice
   .enhanceEndpoints({
     addTagTypes: ["issue"],
@@ -29,6 +35,12 @@ const extendedApi = apiSlice
       getIssues: builder.query<Issue[], string>({
         query: (projectCode: string) => ({
           url: `/api/projects/${projectCode}/issues`,
+        }),
+        providesTags: ["issue"],
+      }),
+      getIssueByCode: builder.query<Issue, getIssueByCodeParams>({
+        query: (params) => ({
+          url: `/api/projects/${params.projectCode}/issues/${params.issueCode}`,
         }),
         providesTags: ["issue"],
       }),
@@ -44,4 +56,8 @@ const extendedApi = apiSlice
     overrideExisting: false,
   });
 
-export const { useGetIssuesQuery, useCreateIssueMutation } = extendedApi;
+export const {
+  useGetIssuesQuery,
+  useGetIssueByCodeQuery,
+  useCreateIssueMutation,
+} = extendedApi;
