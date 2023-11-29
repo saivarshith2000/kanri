@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 public class CommentResponse {
@@ -13,5 +15,5 @@ public class CommentResponse {
     private String userEmail;
 
     @JsonProperty("created_at")
-    private String createdAt;
+    private Instant createdAt;
 }
