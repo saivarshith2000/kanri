@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-    @Query("SELECT i FROM Issue i where i.code = :issueCode")
+    @Query("SELECT i FROM Issue i WHERE i.code = :issueCode")
     Optional<IssueResponseProjection> findIssueByCode(@Param("issueCode") String issueCode);
 
-    @Query("SELECT i FROM Issue i where i.project.code = :projectCode")
+    @Query("SELECT i FROM Issue i WHERE i.project.code = :projectCode")
     List<IssueResponseProjection> findIssuesByProjectCode(@Param("projectCode") String projectCode);
+
+    @Query("SELECT i FROM Issue i WHERE i.type = 'EPIC' AND i.project.code = :projectCode")
+    List<IssueResponseProjection> findEpicsByProjectCode(@Param("projectCode") String projectCode);
 
     Optional<Issue> findByCode(String issueCode);
 }

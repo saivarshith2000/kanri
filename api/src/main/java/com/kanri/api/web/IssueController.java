@@ -44,6 +44,17 @@ public class IssueController {
         return issueService.getIssuesInProject(jwt.getSubject(), projectCode);
     }
 
+    @GetMapping("/{projectCode}/epics")
+    public List<IssueResponse> getEpicsInProject(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid
+            @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
+            @PathVariable
+            String projectCode
+    ) {
+        return issueService.getEpicsInProject(jwt.getSubject(), projectCode);
+    }
+
     @PostMapping("/{projectCode}/issues")
     public IssueResponse createIssue(
             @AuthenticationPrincipal Jwt jwt,

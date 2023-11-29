@@ -40,6 +40,11 @@ public class IssueService {
         return issueRepository.findIssuesByProjectCode(projectCode).stream().map(mapper::projectionToIssueResponse).collect(Collectors.toList());
     }
 
+    public List<IssueResponse> getEpicsInProject(String initiatorUid, String projectCode) {
+        throwOnInsufficientUserPermissions(initiatorUid, projectCode);
+        return issueRepository.findEpicsByProjectCode(projectCode).stream().map(mapper::projectionToIssueResponse).collect(Collectors.toList());
+    }
+
     @Transactional
     public IssueResponse createIssue(String reporterUid, String projectCode, CreateIssueRequest dto) {
         throwOnInsufficientUserPermissions(reporterUid, projectCode);
