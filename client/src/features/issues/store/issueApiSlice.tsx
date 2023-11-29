@@ -28,7 +28,7 @@ type getIssueByCodeParams = {
 
 const extendedApi = apiSlice
   .enhanceEndpoints({
-    addTagTypes: ["issue"],
+    addTagTypes: ["issue", "epic"],
   })
   .injectEndpoints({
     endpoints: (builder) => ({
@@ -38,6 +38,13 @@ const extendedApi = apiSlice
         }),
         providesTags: ["issue"],
       }),
+      getEpics: builder.query<Issue[], string>({
+        query: (projectCode: string) => ({
+          url: `/api/projects/${projectCode}/epics`,
+        }),
+        providesTags: ["epic"],
+      }),
+
       getIssueByCode: builder.query<Issue, getIssueByCodeParams>({
         query: (params) => ({
           url: `/api/projects/${params.projectCode}/issues/${params.issueCode}`,
@@ -58,6 +65,7 @@ const extendedApi = apiSlice
 
 export const {
   useGetIssuesQuery,
+  useGetEpicsQuery,
   useGetIssueByCodeQuery,
   useCreateIssueMutation,
 } = extendedApi;

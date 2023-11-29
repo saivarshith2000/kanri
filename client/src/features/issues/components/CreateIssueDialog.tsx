@@ -25,12 +25,17 @@ import {
 
 import { Button } from "@/shadcnui/ui/button";
 import { isApiError } from "@/store/apiError";
-import { useCreateIssueMutation } from "../store/issueApiSlice";
+import {
+  useCreateIssueMutation,
+  useGetEpicsQuery,
+} from "../store/issueApiSlice";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { Input } from "@/shadcnui/ui/input";
 import { Textarea } from "@/shadcnui/ui/textarea";
+import { useGetUsersQuery } from "@/store/userApiSlice";
+import { Spinner } from "@/components/Spinner";
 
 export const ISSUE_TYPES = [
   "EPIC",
@@ -47,8 +52,8 @@ const schema = z.object({
   story_points: z.coerce.number().min(0.5),
   type: z.enum(ISSUE_TYPES),
   priority: z.enum(ISSUE_PRIORITIES),
-  // epicCode: z.string(),
-  // assigneeEmail: z.string().email(),
+  epicCode: z.string(),
+  assigneeEmail: z.string().email(),
 });
 // .refine(
 //   (data) =>
@@ -63,7 +68,14 @@ function CreateIssueForm({
   onSuccess: () => void;
   projectCode: string;
 }) {
-  const [createIssue, { isLoading }] = useCreateIssueMutation();
+  const [createIssue] = useCreateIssueMutation();
+  const { data: users, isLoading, error } = useGetUsersQuery(projectCode);
+  const {
+    data: epics,
+    isLoading: isEpicsLoading,
+    error: epicsError,
+  } = useGetEpicsQuery(projectCode);
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -72,10 +84,14 @@ function CreateIssueForm({
       type: "STORY",
       priority: "LOW",
       story_points: 0.5,
-      // epicCode: "",
-      // assigneeEmail: "",
+      epicCode: "",
+      assigneeEmail: "",
     },
   });
+
+  if (isLoading || isEpicsLoading) {
+    return <Spinner text="Fetching project details..." />;
+  }
 
   async function onSubmit() {
     try {
@@ -187,6 +203,56 @@ function CreateIssueForm({
                   {ISSUE_PRIORITIES.map((p) => (
                     <SelectItem value={p} key={p}>
                       {p}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="epicCode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>EPIC</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select EPIC" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {epics!.map((e) => (
+                    <SelectItem value={e.code} key={e.code}>
+                      {e.code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="assigneeEmail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assignee</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select assignee" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {users!.map((u) => (
+                    <SelectItem value={u.email} key={u.email}>
+                      {u.email}
                     </SelectItem>
                   ))}
                 </SelectContent>
