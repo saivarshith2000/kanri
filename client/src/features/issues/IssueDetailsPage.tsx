@@ -6,6 +6,22 @@ import { toast } from "react-toastify";
 import IssueTypeBadge from "./components/IssueTypeBadge";
 import IssuePriorityBadge from "./components/IssuePriorityBadge";
 import IssueStatusBadge from "./components/IssueStatusBadge";
+import { useGetCommentsQuery } from "./store/commentApiSlice";
+
+type commentSectionParams = {
+  issueCode: string;
+  projectCode: string;
+};
+
+function CommentSection({ issueCode, projectCode }: commentSectionParams) {
+  const {
+    data: comments,
+    error,
+    isLoading,
+  } = useGetCommentsQuery({ projectCode, issueCode });
+  console.log(comments);
+  return <div>Comment section</div>;
+}
 
 export default function IssueDetailsPage() {
   const { projectCode, issueCode } = useParams();
@@ -50,6 +66,7 @@ export default function IssueDetailsPage() {
         </div>
         <h3>{issue.summary}</h3>
       </div>
+      <CommentSection issueCode={issueCode} projectCode={projectCode} />
     </div>
   );
 }
