@@ -7,6 +7,7 @@ import IssueTypeBadge from "./components/IssueTypeBadge";
 import IssuePriorityBadge from "./components/IssuePriorityBadge";
 import IssueStatusBadge from "./components/IssueStatusBadge";
 import { useGetCommentsQuery } from "./store/commentApiSlice";
+import { useGetWorklogsQuery } from "./store/WorklogApiSlice";
 
 type commentSectionParams = {
   issueCode: string;
@@ -21,6 +22,21 @@ function CommentSection({ issueCode, projectCode }: commentSectionParams) {
   } = useGetCommentsQuery({ projectCode, issueCode });
   console.log(comments);
   return <div>Comment section</div>;
+}
+
+type WorklogSectionParams = {
+  issueCode: string;
+  projectCode: string;
+};
+
+function WorklogSection({ issueCode, projectCode }: WorklogSectionParams) {
+  const {
+    data: worklogs,
+    error,
+    isLoading,
+  } = useGetWorklogsQuery({ projectCode, issueCode });
+  console.log(worklogs);
+  return <div>Worklog section</div>;
 }
 
 export default function IssueDetailsPage() {
@@ -67,6 +83,7 @@ export default function IssueDetailsPage() {
         <h3>{issue.summary}</h3>
       </div>
       <CommentSection issueCode={issueCode} projectCode={projectCode} />
+      <WorklogSection issueCode={issueCode} projectCode={projectCode} />
     </div>
   );
 }
