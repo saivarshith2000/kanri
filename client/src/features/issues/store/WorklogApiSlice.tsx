@@ -3,7 +3,7 @@ import { apiSlice } from "@/store/apiSlice";
 export type Worklog = {
   description: string;
   story_points_spent: number;
-  started_at: Date;
+  started_at: string;
   user_email: string;
 };
 
@@ -22,7 +22,7 @@ type getWorklogsParams = {
 
 const extendedApi = apiSlice
   .enhanceEndpoints({
-    addTagTypes: ["comment"],
+    addTagTypes: ["worklog"],
   })
   .injectEndpoints({
     endpoints: (builder) => ({
@@ -30,7 +30,7 @@ const extendedApi = apiSlice
         query: (params) => ({
           url: `/api/projects/${params.projectCode}/issues/${params.issueCode}/worklogs`,
         }),
-        providesTags: ["comment"],
+        providesTags: ["worklog"],
       }),
       createWorklog: builder.mutation<Worklog, createWorklogPayload>({
         query: (body) => ({
@@ -38,7 +38,7 @@ const extendedApi = apiSlice
           method: "POST",
           body,
         }),
-        invalidatesTags: ["comment"],
+        invalidatesTags: ["worklog"],
       }),
     }),
     overrideExisting: false,

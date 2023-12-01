@@ -3,7 +3,7 @@ import { apiSlice } from "@/store/apiSlice";
 export type Comment = {
   content: string;
   user_email: string;
-  created_at: "OPEN" | "INPROGRESS" | "CLOSED" | "REJECTED";
+  created_at: string;
 };
 
 type createCommentPayload = {

@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { useCreateProjectMutation } from "../store/projectApiSlice";
 import * as z from "zod";
 import {
@@ -33,7 +32,6 @@ const schema = z.object({
 });
 
 function CreateProjectForm({ onSuccess }: { onSuccess: () => void }) {
-  const dispatch = useDispatch();
   const [createProject, { isLoading }] = useCreateProjectMutation();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

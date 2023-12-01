@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import { IssueListPage } from "./IssueListPage";
-import IssueDetailsPage from "./IssueDetailsPage";
+import IssueDetailsPage from "./pages/IssueDetailsPage/IssueDetailsPage";
 
 export default function IssueRoutes() {
   return (
