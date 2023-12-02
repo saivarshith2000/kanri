@@ -1,33 +1,12 @@
 import { Spinner } from "@/components/Spinner";
-import {
-  Worklog,
-  useCreateWorklogMutation,
-  useGetWorklogsQuery,
-} from "../../store/WorklogApiSlice";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/shadcnui/ui/form";
+import { Worklog, useGetWorklogsQuery } from "../../store/WorklogApiSlice";
 import { format, parseISO } from "date-fns";
-import { Button } from "@/shadcnui/ui/button";
-import { isApiError } from "@/store/apiError";
-import { toast } from "react-toastify";
-import { Input } from "@/shadcnui/ui/input";
+import { CreateWorklogDialog } from "./CreateWorklogDialog";
 
-type worklogSectionParams = {
+export type worklogSectionParams = {
   issueCode: string;
   projectCode: string;
 };
-
-const schema = z.object({
-  content: z.string().nonempty(),
-});
 
 function formatCreatedAt(date: string) {
   try {
@@ -59,70 +38,6 @@ function WorklogCard({ worklog }: { worklog: Worklog }) {
   );
 }
 
-function WorklogForm({ issueCode, projectCode }: worklogSectionParams) {
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      content: "",
-    },
-  });
-  const [createWorklog, { isLoading }] = useCreateWorklogMutation();
-
-  async function onSubmit() {
-    try {
-      //   await createWorklog({
-      //     ...form.getValues(),
-      //     issueCode,
-      //     projectCode,
-      //   }).unwrap();
-      form.reset();
-    } catch (err) {
-      if (isApiError(err)) {
-        console.log(err.data.timestamp);
-        toast.error(err.data.errors.msg);
-      } else {
-        toast.error("An error occured. Please try again later.");
-      }
-    }
-  }
-
-  return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="p-2 space-y-1">
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Log work..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-row space-x-2 items-center justify-end">
-            {form.getValues().content.length > 0 ? (
-              <Button variant="ghost" size="sm">
-                Cancel
-              </Button>
-            ) : null}
-            <Button
-              variant="default"
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-800"
-              disabled={form.getValues().content.length === 0 || isLoading}
-            >
-              {isLoading ? "Please wait..." : "Log Work"}
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
-  );
-}
-
 export default function WorklogSection({
   issueCode,
   projectCode,
@@ -139,7 +54,12 @@ export default function WorklogSection({
   }
   return (
     <div className="space-y-2">
-      <WorklogForm issueCode={issueCode} projectCode={projectCode} />
+      <div className="flex flex-row items-center justify-between mx-2">
+        <p className="text-gray-400 text-sm">
+          Work logged on this issue appear here
+        </p>
+        <CreateWorklogDialog issueCode={issueCode} projectCode={projectCode} />
+      </div>
       <div className="divide-y-2 divide-gray-100">
         {worklogs?.map((w) => (
           <WorklogCard worklog={w} />

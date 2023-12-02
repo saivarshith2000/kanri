@@ -35,7 +35,6 @@ public class AttachmentController {
             @ProjectExists String projectCode,
             @PathVariable String issueCode
     ) {
-        System.out.println("here in controller");
         return attachmentService.getAttachments(jwt.getSubject(), projectCode, issueCode);
     }
 

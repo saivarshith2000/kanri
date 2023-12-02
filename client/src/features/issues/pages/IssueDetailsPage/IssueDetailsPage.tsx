@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shadcnui/ui/tabs";
 import CommentSection from "./CommentSection";
 import WorklogSection from "./WorklogSection";
 import { Button } from "@/shadcnui/ui/button";
+import AttachmentSection from "./AttachmentSection";
 
 export default function IssueDetailsPage() {
   const { projectCode, issueCode } = useParams();
@@ -75,12 +76,21 @@ export default function IssueDetailsPage() {
             <TabsTrigger value="worklogs" className="px-8">
               Work Logs
             </TabsTrigger>
+            <TabsTrigger value="attachments" className="px-8">
+              Attachments
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="comments">
             <CommentSection issueCode={issueCode} projectCode={projectCode} />
           </TabsContent>
           <TabsContent value="worklogs">
             <WorklogSection issueCode={issueCode} projectCode={projectCode} />
+          </TabsContent>
+          <TabsContent value="attachments">
+            <AttachmentSection
+              issueCode={issueCode}
+              projectCode={projectCode}
+            />
           </TabsContent>
         </Tabs>
       </div>
