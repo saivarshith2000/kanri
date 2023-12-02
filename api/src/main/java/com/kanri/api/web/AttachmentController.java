@@ -1,6 +1,7 @@
 package com.kanri.api.web;
 
 import com.kanri.api.annotation.ProjectExists;
+import com.kanri.api.dto.issue.AttachmentResponse;
 import com.kanri.api.dto.issue.CreateWorkLogRequest;
 import com.kanri.api.dto.issue.WorkLogResponse;
 import com.kanri.api.service.AttachmentService;
@@ -26,7 +27,7 @@ public class AttachmentController {
 
     @GetMapping("/{projectCode}/issues/{issueCode}/attachments")
     @ProjectExists
-    public Object getAttachmentsInIssue(
+    public List<AttachmentResponse> getAttachmentsInIssue(
             @AuthenticationPrincipal Jwt jwt,
             @Valid
             @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
@@ -41,7 +42,7 @@ public class AttachmentController {
     @SneakyThrows
     @PostMapping("/{projectCode}/issues/{issueCode}/attachments")
     @ProjectExists
-    public Object uploadAttachment(
+    public AttachmentResponse uploadAttachment(
             @AuthenticationPrincipal Jwt jwt,
             @Valid
             @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
