@@ -25,7 +25,14 @@ function formatCreatedAt(date: string) {
 function AttachmentCard({ attachment }: { attachment: Attachment }) {
   return (
     <div className="p-2 mx-1">
-      <p className="font-bold">{attachment.name}</p>
+      <div className="flex flex-row items-center justify-between">
+        <p className="font-bold">{attachment.name}</p>
+        <p className="text-sm">{formatCreatedAt(attachment.created_at)}</p>
+      </div>
+      <div className="flex flex-row items-center justify-between">
+        <p className="text-gray-400 text-sm">{attachment.type}</p>
+        <p className="text-gray-400 text-sm">{attachment.size}</p>
+      </div>
     </div>
   );
 }

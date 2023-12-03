@@ -5,6 +5,7 @@ export type Attachment = {
   name: string;
   type: string;
   size: number;
+  created_at: string;
 };
 
 type createAttachmentPayload = {

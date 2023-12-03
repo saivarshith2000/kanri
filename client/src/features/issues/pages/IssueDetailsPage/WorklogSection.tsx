@@ -62,7 +62,7 @@ export default function WorklogSection({
       </div>
       <div className="divide-y-2 divide-gray-100">
         {worklogs?.map((w) => (
-          <WorklogCard worklog={w} />
+          <WorklogCard worklog={w} key={w.started_at} />
         ))}
       </div>
     </div>

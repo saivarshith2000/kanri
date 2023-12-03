@@ -36,13 +36,12 @@ export default function IssueDetailsPage() {
   return (
     <div className="my-2">
       <div className="flex flex-row m-auto w-3/5">
-        <Button
-          variant="link"
+        <Link
           className="text-blue-600 font-bold"
-          onClick={() => navigate(-1)}
+          to={`/project/${projectCode}/issues`}
         >
           Back to {projectCode}
-        </Button>
+        </Link>
       </div>
       <div className="m-auto p-4 bg-white w-3/5 rounded-md border-2 border-gray-200">
         <div className="flex flex-col gap-2">

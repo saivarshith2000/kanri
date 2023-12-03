@@ -7,6 +7,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface AttachmentMapper {
-    AttachmentResponse projectToResponse(AttachmentResponseProjection projection);
+    AttachmentResponse projectionToResponse(AttachmentResponseProjection projection);
     AttachmentResponse entityToResponse(Attachment attachment);
 }

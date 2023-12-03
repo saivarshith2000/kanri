@@ -42,7 +42,7 @@ public class AttachmentService {
         Issue issue = findIssueByCode(issueCode);
         return attachmentRepository
                 .findByIssue(issue)
-                .stream().map(mapper::projectToResponse)
+                .stream().map(mapper::projectionToResponse)
                 .collect(Collectors.toList());
     }
 

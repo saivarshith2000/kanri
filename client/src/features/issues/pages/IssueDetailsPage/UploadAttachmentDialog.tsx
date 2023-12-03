@@ -25,9 +25,9 @@ type FileDropZoneParams = {
 };
 
 function FileDropZone({ onUpload, isLoading = false }: FileDropZoneParams) {
-  const onDrop = useCallback((file: any) => {
+  const onDrop = useCallback((files: any) => {
     // Do something with the files
-    onUpload(file);
+    onUpload(files[0]); // TODO: Figure out why [0] must be used, use a concrete type for file if possible
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -74,6 +74,7 @@ type UploadAttachmentFormParams = {
 function UploadAttachmentForm({
   issueCode,
   projectCode,
+  onSuccess,
 }: UploadAttachmentFormParams) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -81,13 +82,15 @@ function UploadAttachmentForm({
   const [uploadAttachment, { isLoading }] = useUploadAttachmentMutation();
 
   async function onSubmit() {
+    const attachment = form.getValues().attachment;
     try {
       await uploadAttachment({
         issueCode,
         projectCode,
-        ...form.getValues(),
+        attachment,
       }).unwrap();
       form.reset();
+      onSuccess();
     } catch (err) {
       if (isApiError(err)) {
         console.log(err.data.timestamp);
