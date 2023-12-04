@@ -1,8 +1,10 @@
 package com.kanri.api.web;
 
 import com.kanri.api.dto.account.AccountDTO;
+import com.kanri.api.dto.account.RegisterRequest;
 import com.kanri.api.entity.Account;
 import com.kanri.api.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -21,11 +23,9 @@ public class AccountController {
         return accountService.getAccountByUid(jwt.getSubject());
     }
 
-    @PostMapping("/sync")
-    public AccountDTO syncAccount(@AuthenticationPrincipal Jwt jwt) {
-        String uid = jwt.getSubject();
-        String email = jwt.getClaimAsString("email");
-        return accountService.syncAccount(uid, email);
+    @PostMapping("/register")
+    public AccountDTO register(@RequestBody @Valid RegisterRequest dto) {
+        return accountService.createUser(dto);
     }
 
     @GetMapping("/search")

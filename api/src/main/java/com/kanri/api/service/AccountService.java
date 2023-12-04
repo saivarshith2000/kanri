@@ -1,6 +1,8 @@
 package com.kanri.api.service;
 
 import com.kanri.api.dto.account.AccountDTO;
+import com.kanri.api.dto.account.IdentityProviderRecord;
+import com.kanri.api.dto.account.RegisterRequest;
 import com.kanri.api.entity.Account;
 import com.kanri.api.exception.NotFoundException;
 import com.kanri.api.mapper.AccountMapper;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountService {
+    private final IdentityProviderService identityProviderService;
     private final AccountRepository accountRepository;
     private final AccountMapper mapper;
 
@@ -32,22 +35,18 @@ public class AccountService {
     }
 
     /**
-     * Returns account details that are either newly created as a result of this request (or)
-     * details that already existed previously. This endpoint is expected to be called by the
-     * client on startup as there is no (simple) way to synchronize user records between kanri
-     * database and firebase's backend.
-     * @param uid   Firebase UID of the user
-     * @param email User's email address as registered in Firebase
+     * Attempts to register an account using the identity provider's email and password method
+     * If the attempt is successful, it inserts an entry in DB and returns the user information
+     * @param dto   Register Request DTO containing the required user information
      * @return      Account details stored in the database
-     */
-    public AccountDTO syncAccount(String uid, String email) {
-        Optional<Account> accountInDb = accountRepository.findByUid(uid);
-        if (accountInDb.isEmpty()) {
-            Account account = accountRepository.save(new Account(uid, email));
-            log.info("Created a new account with uid " + uid + " and email " + email);
-            return mapper.toAccountDTO(account);
-        }
-        return mapper.toAccountDTO(accountInDb.get());
+     */    public AccountDTO createUser(RegisterRequest dto) {
+        log.info("Creating Firebase User for {}", dto.getEmail());
+        IdentityProviderRecord record = identityProviderService.createUserWithEmailAndPassword(dto.getEmail(), dto.getPassword(), dto.getDisplayName());
+        Account account = new Account();
+        account.setUid(record.getUid());
+        account.setEmail(record.getEmail());
+        account.setDisplayName(record.getDisplayName());
+        return mapper.toAccountDTO(accountRepository.save(account));
     }
 
     /**

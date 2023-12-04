@@ -18,6 +18,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
+/*
+ * This filter is not required anymore since registration has been moved
+ * into this service using the firebase sdk
+ */
 @Component
 @RequiredArgsConstructor
 public class AccountExistsFilter extends OncePerRequestFilter {
@@ -29,8 +33,8 @@ public class AccountExistsFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws IOException, ServletException {
         String path = request.getServletPath();
-        if (path.equals("/api/accounts/sync")) {
-            // Do not invoke this filter for account sync path
+        if (path.equals("/api/accounts/register")) {
+            // Do not invoke this filter for account registration path
             filterChain.doFilter(request, response);
             return;
         }

@@ -25,6 +25,9 @@ public class Account extends BaseEntity {
     @NaturalId
     private String email;
 
+    @NonNull
+    private String displayName;
+
     @OneToMany(mappedBy = "account")
     List<RoleAssignment> roleAssignments = new ArrayList<>();
 }

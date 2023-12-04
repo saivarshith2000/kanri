@@ -1,4 +1,4 @@
-package com.kanri.api.security;
+package com.kanri.api.config;
 
 
 import com.kanri.api.filter.AccountExistsFilter;
@@ -25,7 +25,6 @@ public class SecurityConfig {
     @Value("${web.cors.allowedorigin}")
     private String corsAllowedOrigin;
 
-    private final AccountExistsFilter accountExistsFilter;
     @Bean
     @SneakyThrows
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -35,11 +34,10 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz ->
                         authz
-                                .requestMatchers("/actuator/health").permitAll()
+                                .requestMatchers("/actuator/health", "/api/accounts/register").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(customizer -> customizer.jwt(jwtConfigurer -> {}))
-                .addFilterAfter(accountExistsFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
