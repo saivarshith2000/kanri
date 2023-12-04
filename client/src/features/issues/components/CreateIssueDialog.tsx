@@ -46,20 +46,25 @@ export const ISSUE_TYPES = [
 ] as const;
 export const ISSUE_PRIORITIES = ["LOW", "MEDIUM", "HIGH", "BLOCKER"] as const;
 
-const schema = z.object({
-  summary: z.string().nonempty(),
-  description: z.string().nonempty(),
-  story_points: z.coerce.number().min(0.5),
-  type: z.enum(ISSUE_TYPES),
-  priority: z.enum(ISSUE_PRIORITIES),
-  epicCode: z.string(),
-  assigneeEmail: z.string().email(),
-});
-// .refine(
-//   (data) =>
-//     data.type != "EPIC" || (data.type == "EPIC" && data.epicCode != ""),
-//   { message: "EPIC is required", path: ["epicCode"] }
-// );
+const schema = z
+  .object({
+    summary: z.string().nonempty(),
+    description: z.string().nonempty(),
+    story_points: z.coerce.number().min(0.5),
+    type: z.enum(ISSUE_TYPES),
+    priority: z.enum(ISSUE_PRIORITIES),
+    epicCode: z.string(),
+    assigneeEmail: z.string().email(),
+  })
+  .refine(
+    (data) =>
+      (data.type == "EPIC" && data.epicCode == "") ||
+      (data.type != "EPIC" && data.epicCode != ""),
+    {
+      message: "EPIC is required",
+      path: ["epicCode"],
+    }
+  );
 
 function CreateIssueForm({
   onSuccess,
@@ -95,13 +100,11 @@ function CreateIssueForm({
 
   async function onSubmit() {
     try {
-      await createIssue({
+      const response = await createIssue({
         ...form.getValues(),
         projectCode,
-        assigneeEmail: "user1@dev.com", // TODO
-        epicCode: "TESTA-1", // TODO
       }).unwrap();
-      const issueCode = "ISSUE-CODE"; // TODO
+      const issueCode = response.code;
       toast.success(`Issue ${issueCode} created successfully`);
       onSuccess();
       form.reset();

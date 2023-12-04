@@ -17,8 +17,8 @@ export type CreateIssuePayload = {
   type: "EPIC" | "DEFECT" | "STORY" | "TASK" | "SPIKE";
   priority: "LOW" | "MEDIUM" | "HIGH" | "BLOCKER";
   story_points: number;
-  epicCode: "TESTA-1";
-  assigneeEmail: "user1@dev.com";
+  epicCode: string;
+  assigneeEmail: string;
 };
 
 type getIssueByCodeParams = {

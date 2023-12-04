@@ -13,7 +13,7 @@ export default function IssuePriorityBadge({
   };
   return (
     <span
-      className={`p-0.5 px-1 text-white text-center rounded-md text-xs font-bold ${bgColor[priority]} w-[50px]`}
+      className={`p-0.5 px-1 items-center text-white text-center rounded-md text-xs font-bold ${bgColor[priority]} w-[60px]`}
     >
       {priority}
     </span>
