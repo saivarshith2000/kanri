@@ -21,12 +21,15 @@ export async function firebaseSignin(
 ): Promise<FirebaseSigninResponse> {
   try {
     const response = await signInWithEmailAndPassword(auth, email, password);
+    if (response.user.email === null || response.user.displayName === null) {
+      throw new Error(
+        "Invalid email or displayName. Please contact your administrator"
+      );
+    }
     return {
       user: {
-        email: response.user.email!,
-        name: response.user.displayName
-          ? response.user.displayName
-          : "Kanri User",
+        email: response.user.email,
+        name: response.user.displayName,
       },
     };
   } catch (err) {
