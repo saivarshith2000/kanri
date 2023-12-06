@@ -22,5 +22,5 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     Optional<Issue> findByCode(String issueCode);
 
-    Integer countByProject(Project project);
+    Long countByProject(Project project);
 }
