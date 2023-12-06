@@ -50,9 +50,9 @@ public class IssueServiceTest {
     @InjectMocks
     private IssueService issueService;
 
-    private Account user = new Account("test-uid", "test-user@test.com");
-    private Account reporter = new Account("reporter", "reporter@testcom");
-    private Account assignee = new Account("assignee", "assignee@test.com");
+    private Account user = new Account("test-uid", "test-user@test.com", "testuser");
+    private Account reporter = new Account("reporter", "reporter@testcom", "testreporter");
+    private Account assignee = new Account("assignee", "assignee@test.com", "testassignee");
     private Project project = new Project("TESTP", "TESTP", "Test Project");
     private RoleAssignment userRA = new RoleAssignment(user, project, Role.USER);
     private RoleAssignment reporterRA = new RoleAssignment(reporter, project, Role.USER);
@@ -168,7 +168,7 @@ public class IssueServiceTest {
     @DisplayName("Create a new EPIC in project")
     void createNewEpic() {
         when(projectRepository.findByCode(project.getCode())).thenReturn(Optional.of(project));
-        when(issueRepository.count()).thenReturn(0L);
+        when(issueRepository.countByProject(project)).thenReturn(0L);
         when(issueRepository.save(any())).then(returnsFirstArg());
         when(accountRepository.findByUid(reporter.getUid())).thenReturn(Optional.of(reporter));
         when(accountRepository.findByEmail(assignee.getEmail())).thenReturn(Optional.of(assignee));
@@ -197,7 +197,7 @@ public class IssueServiceTest {
     @DisplayName("Create a new non-EPIC issue in project")
     void createNewIssue() {
         when(projectRepository.findByCode(project.getCode())).thenReturn(Optional.of(project));
-        when(issueRepository.count()).thenReturn(0L);
+        when(issueRepository.countByProject(project)).thenReturn(0L);
         when(issueRepository.save(any())).then(returnsFirstArg());
         when(issueRepository.findByCode(createIssueRequest.getEpicCode())).thenReturn(Optional.of(testEpic));
         when(accountRepository.findByUid(reporter.getUid())).thenReturn(Optional.of(reporter));

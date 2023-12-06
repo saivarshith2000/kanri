@@ -42,8 +42,8 @@ class RoleManagementServiceTest {
     private RoleManagementService roleManagementService;
 
     // Common across tests
-    private final Account initiator = new Account("initiator-uid", "initiator@test.com");
-    private final Account user = new Account("user-uid", "user@test.com");
+    private final Account initiator = new Account("initiator-uid", "initiator@test.com", "testinitator");
+    private final Account user = new Account("user-uid", "user@test.com", "testuser");
     private final Project project = new Project("TEST", "TEST", "DESC");
 
     @Test

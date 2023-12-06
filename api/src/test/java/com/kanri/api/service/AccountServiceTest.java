@@ -37,11 +37,13 @@ public class AccountServiceTest {
     void getAccountByUid() {
         String uid = "test-uid-abc-123";
         String email = "testuser@test.com";
-        Account account = new Account(uid, email);
+        String name = "testuser";
+        Account account = new Account(uid, email, name);
         when(accountRepository.findByUid(uid)).thenReturn(Optional.of(account));
         AccountDTO dto = accountService.getAccountByUid(uid);
         assertThat(dto.getUid()).isEqualTo(uid);
         assertThat(dto.getEmail()).isEqualTo(email);
+        assertThat(dto.getDisplayName()).isEqualTo(name);
     }
 
     @Test
@@ -55,34 +57,9 @@ public class AccountServiceTest {
     }
 
     @Test
-    @DisplayName("Sync Account when account already exists")
-    void syncAccountForExistingAccount() {
-        String uid = "test-uid-abc-123";
-        String email = "testuser@test.com";
-        Account account = new Account(uid, email);
-        when(accountRepository.findByUid(uid)).thenReturn(Optional.of(account));
-        AccountDTO dto = accountService.syncAccount(uid, email);
-        assertThat(dto.getUid()).isEqualTo(uid);
-        assertThat(dto.getEmail()).isEqualTo(email);
-    }
-
-    @Test
-    @DisplayName("Sync Account for a new account")
-    void syncAccountForNewAccount() {
-        String uid = "test-uid-abc-123";
-        String email = "testuser@test.com";
-        Account account = new Account(uid, email);
-        when(accountRepository.findByUid(uid)).thenReturn(Optional.empty());
-        when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
-        AccountDTO dto = accountService.syncAccount(uid, email);
-        assertThat(dto.getUid()).isEqualTo(uid);
-        assertThat(dto.getEmail()).isEqualTo(email);
-    }
-
-    @Test
     @DisplayName("Get List of user accounts with email search string")
     void getAccountsWithEmailSearchString() {
-        Account account = new Account("uid-test-a", "testa@testmail.com");
+        Account account = new Account("uid-test-a", "testa@testmail.com", "testuser");
         String emailSearch = "testa";
         when(accountRepository.findByEmailContainingIgnoreCase(emailSearch)).thenReturn(List.of(account));
         List<AccountDTO> accounts = accountService.searchByEmail(emailSearch);

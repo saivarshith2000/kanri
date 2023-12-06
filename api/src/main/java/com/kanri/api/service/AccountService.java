@@ -39,7 +39,8 @@ public class AccountService {
      * If the attempt is successful, it inserts an entry in DB and returns the user information
      * @param dto   Register Request DTO containing the required user information
      * @return      Account details stored in the database
-     */    public AccountDTO createUser(RegisterRequest dto) {
+     */
+    public AccountDTO createUser(RegisterRequest dto) {
         log.info("Creating Firebase User for {}", dto.getEmail());
         IdentityProviderRecord record = identityProviderService.createUserWithEmailAndPassword(dto.getEmail(), dto.getPassword(), dto.getDisplayName());
         Account account = new Account();

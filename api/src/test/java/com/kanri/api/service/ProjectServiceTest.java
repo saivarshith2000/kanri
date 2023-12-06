@@ -56,7 +56,7 @@ class ProjectServiceTest {
     @Test
     @DisplayName("Create a project")
     void createProject() {
-        Account account = new Account("test-1", "test1@test.com");
+        Account account = new Account("test-1", "test1@test.com", "test1");
         CreateProjectRequest request = new CreateProjectRequest("TP-A", "TESTA", "Desc");
         Project project = new Project(request.getName(), request.getCode(), request.getDescription());
 
@@ -75,7 +75,7 @@ class ProjectServiceTest {
     @Test
     @DisplayName("Throw ForbiddenException when Creating a project after limit is reached")
     void createProjectAfterReachingLimit() {
-        Account account = new Account("test-1", "test1@test.com");
+        Account account = new Account("test-1", "test1@test.com", "test1");
         CreateProjectRequest request = new CreateProjectRequest("TP-A", "TESTA", "Desc");
 
         when(roleAssignmentRepository.countProjectsOwnedByUid(any())).thenReturn(MAX_PROJECT_LIMIT);
@@ -93,7 +93,7 @@ class ProjectServiceTest {
                 new MyProjectListItemResponse("TP-B", "TPB", "Desc", null, null, Role.USER),
                 new MyProjectListItemResponse("TP-C", "TPC", "Desc", null, null, Role.ADMIN)
         };
-        Account account = new Account("test-uid-1", "test@testmail.com");
+        Account account = new Account("test-uid-1", "test@testmail.com", "test1");
         when(roleAssignmentRepository
                 .getProjectsByUid(account.getUid()))
                 .thenReturn(List.of(response));

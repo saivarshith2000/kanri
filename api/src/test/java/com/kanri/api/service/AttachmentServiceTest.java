@@ -4,10 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StatusTransitionServiceTest {
+class AttachmentServiceTest {
     // TODO
+    @Test
+    void getAttachments() {
+    }
 
     @Test
-    void isValid() {
+    void uploadAttachment() {
     }
 }
