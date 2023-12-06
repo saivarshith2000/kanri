@@ -18,7 +18,7 @@ export default function IssueListItem({
       <div className="flex flex-row gap-4">
         <IssueTypeBadge type={issue.type} />
         <Link
-          className="text-sm w-[75px] justify-start text-blue-700 hover:underline"
+          className="text-sm w-[100px] justify-start text-blue-500 hover:underline font-bold"
           to={`/project/${projectCode}/issues/${issue.code}`}
         >
           {issue.code}
@@ -28,7 +28,7 @@ export default function IssueListItem({
       <div className="flex flex-row gap-2">
         <IssuePriorityBadge priority={issue.priority} />
         <IssueStatusBadge status={issue.status} />
-        <p className="bg-gray-200 text-center w-[30px] text-sm font-bold text-gray-800 rounded-md">
+        <p className="bg-gray-200 text-center w-[50px] text-sm font-bold text-gray-800 rounded-md">
           {issue.story_points}
         </p>
       </div>

@@ -12,7 +12,7 @@ export default function IssueTypeBadge({ type }: IssueTypeBadgeProps) {
   };
   return (
     <span
-      className={`p-0.5 px-1 text-white text-center rounded-md text-xs font-bold ${bgColor[type]} w-[50px]`}
+      className={`p-0.5 px-1 text-white text-center rounded-md text-xs font-bold ${bgColor[type]} w-[75px]`}
     >
       {type}
     </span>

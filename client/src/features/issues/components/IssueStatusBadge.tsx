@@ -11,7 +11,7 @@ export default function IssueStatusBadge({ status }: IssueStatusBadgeProps) {
   };
   return (
     <span
-      className={`p-0.5 px-1 bg-gray-200 text-center rounded-md text-xs font-bold ${bgColor[status]} w-[50px]`}
+      className={`p-0.5 px-1 bg-gray-200 text-center rounded-md text-xs font-bold ${bgColor[status]} w-[75px]`}
     >
       {status}
     </span>
