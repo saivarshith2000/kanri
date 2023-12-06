@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  api:
+    build: api
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+      - 7000:7000
+    environment:
+      - PG_HOST=postgres:5432
+      - PG_DB_NAME=kanri_db
+      - PG_USERNAME=kanri_api_user
+      - PG_PASSWORD=kanri_api_password
+      - FIREBASE_PROJECT_ID=kanri-69e72
+      - "ALLOWED_ORIGINS='http://localhost:5173'"
+    volumes:
+      - ./secrets:/app/secrets
+
+  postgres:
+    image: "postgres:16-alpine"
+    environment:
+      - POSTGRES_DB=kanri_db
+      - POSTGRES_USER=kanri_api_user
+      - POSTGRES_PASSWORD=kanri_api_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
