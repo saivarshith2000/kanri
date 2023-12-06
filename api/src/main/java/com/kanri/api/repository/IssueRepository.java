@@ -1,6 +1,7 @@
 package com.kanri.api.repository;
 
 import com.kanri.api.entity.Issue;
+import com.kanri.api.entity.Project;
 import com.kanri.api.projection.IssueResponseProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<IssueResponseProjection> findEpicsByProjectCode(@Param("projectCode") String projectCode);
 
     Optional<Issue> findByCode(String issueCode);
+
+    Integer countByProject(Project project);
 }

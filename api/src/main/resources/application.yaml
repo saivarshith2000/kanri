@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: ${kanri.attachment.max_attachment_size_mb}MB
+
   jpa:
     open-in-view: false
     hibernate.ddl-auto: update
@@ -23,6 +27,21 @@ management:
     health:
       show-details: always
 
+logging:
+  level:
+    org.springframework:
+      security.web: DEBUG
+      hibernate: DEBUG
+
+web:
+  cors:
+    allowedorigin: "http://localhost:5173"
+
+
 kanri:
   project:
     max_project_limit: 3
+  attachment:
+    max_attachments_per_issue: 5
+    max_attachment_size_mb: 1
+    allowed_types: text/plain, application/pdf, image/png, image/jpg, image/jpeg

@@ -3,10 +3,7 @@ package com.kanri.api.dto.issue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kanri.api.entity.IssueType;
 import com.kanri.api.entity.Priority;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -35,6 +32,7 @@ public class CreateIssueRequest {
     @NotNull
     private IssueType type;
 
+    @Email
     @JsonProperty("assignee_email")
     private String assigneeEmail;
 
