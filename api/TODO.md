@@ -11,11 +11,11 @@
 - [x] Fix error handling when assignee is not part of project in issueService
 - [ ] IN-PROGRESS | Add tests for Issue Service
 - [ ] IN-PROGRESS | Add cases for edit/update issue in issue service and controller
-- [ ] Add First and Last names from firebase to Account entity
+- [x] Add First and Last names from firebase to Account entity
 - [ ] Implement checks to ensure that a project doesn't end up without an owner in MODIFY and DELETE flows
 - [ ] IN-PROGRESS | Add Work Log entity and its related objects
-- [ ] Add Comments entity and its related objects
+- [x] Add Comments entity and its related objects
 - [ ] Add pagination and filters when searching for issues
 - [ ] Add tests for JPA layer
 - [ ] Add integration tests for controller validation
-- [ ] Add File Upload feature to allow attachments with issues
+- [x] Add File Upload feature to allow attachments with issues
