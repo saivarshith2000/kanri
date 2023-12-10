@@ -1,6 +1,7 @@
 import { apiSlice } from "@/store/apiSlice";
 
 export type Attachment = {
+  id: number;
   content: string;
   name: string;
   type: string;
@@ -15,6 +16,12 @@ type createAttachmentPayload = {
 };
 
 type getAttachmentsParams = {
+  projectCode: string;
+  issueCode: string;
+};
+
+type deleteAttachmentsParams = {
+  id: number;
   projectCode: string;
   issueCode: string;
 };
@@ -44,9 +51,19 @@ const extendedApi = apiSlice
         },
         invalidatesTags: ["attachment"],
       }),
+      deleteAttachment: builder.mutation<void, deleteAttachmentsParams>({
+        query: (params) => ({
+          url: `/api/projects/${params.projectCode}/issues/${params.issueCode}/attachments/${params.id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["attachment"],
+      }),
     }),
     overrideExisting: false,
   });
 
-export const { useGetAttachmentsQuery, useUploadAttachmentMutation } =
-  extendedApi;
+export const {
+  useGetAttachmentsQuery,
+  useUploadAttachmentMutation,
+  useDeleteAttachmentMutation,
+} = extendedApi;

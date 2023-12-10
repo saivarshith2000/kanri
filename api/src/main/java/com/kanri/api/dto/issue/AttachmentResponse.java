@@ -9,6 +9,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 public class AttachmentResponse {
+    private Long id;
     private String name;
     private String type;
     private Long size;

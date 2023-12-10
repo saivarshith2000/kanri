@@ -1,10 +1,14 @@
 import { Spinner } from "@/components/Spinner";
 import {
   Attachment,
+  useDeleteAttachmentMutation,
   useGetAttachmentsQuery,
 } from "../../store/attachmentApiSlice";
 import { format, parseISO } from "date-fns";
 import { UploadAttachmentDialog } from "./UploadAttachmentDialog";
+import { Button } from "@/shadcnui/ui/button";
+import { toast } from "react-toastify";
+import { isApiError } from "@/store/apiError";
 
 export type AttachmentSectionParams = {
   issueCode: string;
@@ -22,17 +26,55 @@ function formatCreatedAt(date: string) {
   }
 }
 
-function AttachmentCard({ attachment }: { attachment: Attachment }) {
+type AttachmentCardProps = {
+  attachment: Attachment;
+  issueCode: string;
+  projectCode: string;
+};
+
+function AttachmentCard({
+  attachment,
+  issueCode,
+  projectCode,
+}: AttachmentCardProps) {
+  const [deleteAttachment, { isLoading }] = useDeleteAttachmentMutation();
+
+  const handleDelete = () => {
+    try {
+      deleteAttachment({ issueCode, projectCode, id: attachment.id });
+    } catch (err) {
+      if (isApiError(err)) {
+        console.log(err.data.timestamp);
+        toast.error(err.data.errors.msg);
+      } else {
+        toast.error("An error occured. Please try again later.");
+      }
+    }
+  };
+
   return (
-    <div className="p-2 mx-1">
-      <div className="flex flex-row items-center justify-between">
-        <p className="font-bold">{attachment.name}</p>
-        <p className="text-sm">{formatCreatedAt(attachment.created_at)}</p>
+    <div className="p-2 mx-1 flex flex-row justify-between items-center">
+      <div className="flex-1">
+        <div className="flex flex-row items-center justify-between">
+          <p className="font-bold">{attachment.name}</p>
+          <p>{attachment.size} Bytes</p>
+        </div>
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-gray-400 text-sm">
+            {formatCreatedAt(attachment.created_at)}
+          </p>
+          <p className="text-gray-400 text-sm">{attachment.type}</p>
+        </div>
       </div>
-      <div className="flex flex-row items-center justify-between">
-        <p className="text-gray-400 text-sm">{attachment.type}</p>
-        <p className="text-gray-400 text-sm">{attachment.size}</p>
-      </div>
+      <Button
+        variant="ghost"
+        className="text-red-400 hover:text-red-400 ml-4"
+        size="sm"
+        onClick={handleDelete}
+        disabled={isLoading}
+      >
+        {isLoading ? "Please wait" : "Delete"}
+      </Button>
     </div>
   );
 }
@@ -46,6 +88,7 @@ export default function AttachmentSection({
     error,
     isLoading,
   } = useGetAttachmentsQuery({ projectCode, issueCode });
+
   if (isLoading) {
     return <Spinner text="Loading attachments..." />;
   } else if (error) {
@@ -64,7 +107,12 @@ export default function AttachmentSection({
       </div>
       <div className="divide-y-2 divide-gray-100">
         {attachments?.map((a) => (
-          <AttachmentCard attachment={a} key={a.name} />
+          <AttachmentCard
+            attachment={a}
+            key={a.name}
+            projectCode={projectCode}
+            issueCode={issueCode}
+          />
         ))}
       </div>
     </div>

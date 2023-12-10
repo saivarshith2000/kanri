@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -59,5 +60,21 @@ public class AttachmentController {
                 file.getSize(),
                 file.getBytes()
         );
+    }
+
+    @SneakyThrows
+    @DeleteMapping("/{projectCode}/issues/{issueCode}/attachments/{id}")
+    @ProjectExists
+    public ResponseEntity<?> deleteAttachment(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid
+            @Pattern(regexp = "^[A-Z]{3,8}$", message = "Code must be UPPERCASE Alphabets and between 3 to 8 characters")
+            @PathVariable
+            @ProjectExists String projectCode,
+            @PathVariable String issueCode,
+            @PathVariable("id") Long id
+    ) {
+        attachmentService.deleteAttachment(jwt.getSubject(), projectCode, issueCode, id);
+        return ResponseEntity.ok("Attachment deleted successfully");
     }
 }

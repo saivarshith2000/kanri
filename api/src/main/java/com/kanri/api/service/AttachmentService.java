@@ -69,6 +69,12 @@ public class AttachmentService {
         }
     }
 
+    public void deleteAttachment(String uid, String projectCode, String issueCode, Long id) {
+        throwIfIssueDoesNotBelongToProject(projectCode, issueCode);
+        throwOnInsufficientUserPermissions(uid, projectCode);
+        attachmentRepository.deleteById(id);
+    }
+
     @SneakyThrows
     private String getChecksum(byte[] file) {
         byte[] hash = MessageDigest.getInstance("MD5").digest(file);
