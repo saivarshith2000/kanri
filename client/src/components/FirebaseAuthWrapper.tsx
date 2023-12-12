@@ -4,10 +4,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Spinner } from "./Spinner";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 export function FirebaseAuthWrapper() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = getAuth();
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,8 +23,6 @@ export function FirebaseAuthWrapper() {
               : "Kanri User",
           })
         );
-        // Navigate to the landing page (projects page)
-        navigate("/projects");
       } else {
         dispatch(signout());
         FirebaseSignOutUser();
