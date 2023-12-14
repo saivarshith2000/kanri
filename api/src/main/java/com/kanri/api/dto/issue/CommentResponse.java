@@ -9,6 +9,8 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 public class CommentResponse {
+    private Long id;
+
     private String content;
 
     @JsonProperty("user_email")

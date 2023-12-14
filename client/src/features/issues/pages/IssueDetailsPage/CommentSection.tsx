@@ -2,6 +2,7 @@ import { Spinner } from "@/components/Spinner";
 import {
   Comment,
   useCreateCommentMutation,
+  useDeleteCommentMutation,
   useGetCommentsQuery,
 } from "../../store/commentApiSlice";
 import * as z from "zod";
@@ -40,7 +41,30 @@ function formatCreatedAt(date: string) {
   }
 }
 
-function CommentCard({ comment }: { comment: Comment }) {
+function CommentCard({
+  comment,
+  issueCode,
+  projectCode,
+}: {
+  comment: Comment;
+  issueCode: string;
+  projectCode: string;
+}) {
+  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+
+  const handleDelete = () => {
+    try {
+      deleteComment({ id: comment.id, issueCode, projectCode });
+    } catch (err) {
+      if (isApiError(err)) {
+        console.log(err.data.timestamp);
+        toast.error(err.data.errors.msg);
+      } else {
+        toast.error("An error occured. Please try again later.");
+      }
+    }
+  };
+
   return (
     <div className="p-2 mx-1">
       <div className="flex flex-row justify-between items-center">
@@ -49,7 +73,16 @@ function CommentCard({ comment }: { comment: Comment }) {
           {formatCreatedAt(comment.created_at)}
         </p>
       </div>
-      <p>{comment.content}</p>
+      <div className="flex flex-row justify-between items-center">
+        <p>{comment.content}</p>
+        <Button
+          onClick={handleDelete}
+          variant="ghost"
+          className="text-red-500 hover:text-red-500 hover:bg-transparent"
+        >
+          Delete
+        </Button>
+      </div>
     </div>
   );
 }
@@ -137,7 +170,12 @@ export default function CommentSection({
       <CommentForm issueCode={issueCode} projectCode={projectCode} />
       <div className="divide-y-2 divide-gray-100">
         {comments?.map((c) => (
-          <CommentCard comment={c} key={c.created_at} />
+          <CommentCard
+            comment={c}
+            key={c.created_at}
+            issueCode={issueCode}
+            projectCode={projectCode}
+          />
         ))}
       </div>
     </div>

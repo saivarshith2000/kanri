@@ -39,6 +39,7 @@ function AttachmentCard({
 }: AttachmentCardProps) {
   const [deleteAttachment, { isLoading }] = useDeleteAttachmentMutation();
 
+  console.log(attachment);
   const handleDelete = () => {
     try {
       deleteAttachment({ issueCode, projectCode, id: attachment.id });
@@ -66,6 +67,28 @@ function AttachmentCard({
           <p className="text-gray-400 text-sm">{attachment.type}</p>
         </div>
       </div>
+
+      <a
+        download={attachment.name}
+        target="_blank"
+        rel="noreferrer"
+        href={URL.createObjectURL(
+          new Blob([atob(attachment.content)], { type: attachment.type })
+        )}
+        style={{
+          textDecoration: "inherit",
+          color: "inherit",
+        }}
+      >
+        <Button
+          variant="ghost"
+          className="text-blue-400 hover:text-blue-400 ml-4"
+          size="sm"
+        >
+          Download
+        </Button>
+      </a>
+
       <Button
         variant="ghost"
         className="text-red-400 hover:text-red-400 ml-4"

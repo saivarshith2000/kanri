@@ -58,8 +58,14 @@ public class CommentService {
         return null;
     }
 
-    public Object deleteComment(String userUid, String projectCode, String issueCode, Long commentId) {
-        return null;
+    public void deleteComment(String userUid, String projectCode, String issueCode, Long commentId) {
+        throwIfIssueDoesNotBelongToProject(projectCode, issueCode);
+        throwOnInsufficientUserPermissions(userUid, projectCode);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        if (!comment.getUser().getUid().equals(userUid)) {
+            throw new ForbiddenException("Cannot delete comments created by another user");
+        }
+        commentRepository.deleteById(commentId);
     }
 
     private void throwIfIssueDoesNotBelongToProject(String projectCode, String issueCode) {

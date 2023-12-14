@@ -56,7 +56,7 @@ public class CommentController {
             @ProjectExists
             String projectCode,
             @PathVariable String issueCode,
-            Long workLogId
+            Long commentId
     ) {
         return "This endpoint is not operational yet";
     }
@@ -70,7 +70,8 @@ public class CommentController {
             @ProjectExists
             String projectCode,
             @PathVariable String issueCode,
-            Long workLogId
+            @PathVariable Long commentId
     ) {
-        return "This endpoint is not operational yet";
+        commentService.deleteComment(jwt.getSubject(), projectCode, issueCode, commentId);
+        return "Comment deleted successfully";
     }}
