@@ -8,6 +8,7 @@ import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { Projects } from './pages/projects/components/Projects';
 import { FirebaseAuthWrapper } from './components/FirebaseAuthWrapper/FirebaseAuthWrapper';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
+import { Issues } from './pages/issues/Issues';
 
 export function Router() {
   return <BrowserRouter>
@@ -21,6 +22,7 @@ export function Router() {
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:projectCode/issues" element={<Issues />} />
           </Route>
           <Route path="*" element={<ErrorPage />} />
         </Route>

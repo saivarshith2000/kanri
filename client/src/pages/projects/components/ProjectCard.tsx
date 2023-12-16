@@ -15,7 +15,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         p={16} w={250}
         withBorder
         mah='150px'
-        onClick={() => navigate(`/issues/${project.code}`)}
+        onClick={() => navigate(`/projects/${project.code}/issues`)}
         style={{ cursor: "pointer" }}
     >
         <Stack gap={2}>
