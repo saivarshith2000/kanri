@@ -22,6 +22,7 @@ const schema = z
   });
 
 export type SignupFormProps = {
+  isLoading: boolean;
   handleSignup: ({
     name,
     email,
@@ -33,7 +34,7 @@ export type SignupFormProps = {
   }) => void;
 };
 
-export function SignupForm({ handleSignup }: SignupFormProps) {
+export function SignupForm({ handleSignup, isLoading }: SignupFormProps) {
   const form = useForm({
     initialValues: {
       name: '',
@@ -82,7 +83,7 @@ export function SignupForm({ handleSignup }: SignupFormProps) {
           {...form.getInputProps('confirm_password')}
         />
 
-        <Button type="submit" fullWidth bg="green">
+        <Button type="submit" fullWidth bg="green" loading={isLoading}>
           Sign Up
         </Button>
       </Stack>

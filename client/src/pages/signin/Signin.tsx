@@ -5,13 +5,17 @@ import { firebaseSignin } from '@/firebase';
 import { useDispatch } from 'react-redux';
 import { notifications } from '@mantine/notifications';
 import { signin } from './store';
+import { useState } from 'react';
 
 export function Signin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSignin({ email, password }: { email: string; password: string }) {
+    setIsLoading(true);
     const result = await firebaseSignin(email, password);
+    setIsLoading(false);
     if (result.user) {
       notifications.show({
         message: 'Sign In Successful',
@@ -36,7 +40,7 @@ export function Signin() {
         <Text size="32px" fw="bold" ta="center">
           Sign In
         </Text>
-        <SigninForm handleSignin={handleSignin} />
+        <SigninForm handleSignin={handleSignin} isLoading={isLoading} />
       </Paper>
       <Link to="/signup" style={{ textDecoration: 'none' }}>
         <Text c="blue" ta="center" mt={16} style={{ textDecoration: 'underline' }}>

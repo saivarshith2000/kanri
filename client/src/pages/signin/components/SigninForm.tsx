@@ -4,6 +4,7 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { z } from 'zod';
 
 export type SigninFormProps = {
+  isLoading: boolean;
   handleSignin: ({ email, password }: { email: string; password: string }) => void;
 };
 
@@ -15,7 +16,7 @@ const schema = z.object({
     .max(32, 'Password should be within 32 letters'),
 });
 
-export function SigninForm({ handleSignin }: SigninFormProps) {
+export function SigninForm({ handleSignin, isLoading }: SigninFormProps) {
   const form = useForm({
     initialValues: {
       email: '',
@@ -47,7 +48,7 @@ export function SigninForm({ handleSignin }: SigninFormProps) {
           {...form.getInputProps('password')}
         />
 
-        <Button type="submit" fullWidth>
+        <Button type="submit" fullWidth loading={isLoading}>
           Submit
         </Button>
       </Stack>
