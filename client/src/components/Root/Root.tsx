@@ -26,7 +26,7 @@ export function Root() {
   }
 
   return (
-    <AppShell>
+    <AppShell header={{ height: '80px' }}>
       <AppShell.Header>
         <Flex justify="space-between" w={{ base: '100%', md: '75%' }} m="auto">
           <Link to="/" style={{ textDecoration: 'none' }}>
@@ -48,6 +48,6 @@ export function Root() {
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
-    </AppShell>
+    </AppShell >
   );
 }
