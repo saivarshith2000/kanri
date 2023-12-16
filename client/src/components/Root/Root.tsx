@@ -1,17 +1,36 @@
-import { Flex, Group, Text, AppShell, Anchor } from '@mantine/core';
+import { Flex, Group, Text, AppShell, Anchor, Menu, Button } from '@mantine/core';
 import { Outlet } from 'react-router';
 import classes from './Root.module.css';
 import { Link } from 'react-router-dom';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
-import { isAuthenticatedSelector } from '@/pages/signin/store';
-import { useSelector } from 'react-redux';
+import { authSelector, isAuthenticatedSelector, signout } from '@/pages/signin/store';
+import { apiSlice } from "@/store/apiSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { FirebaseSignOutUser } from '@/firebase';
 
 export function Root() {
   const isAuthenticated = useSelector(isAuthenticatedSelector);
+  const auth = useSelector(authSelector);
+  const dispatch = useDispatch();
+
+  function handleSignout() {
+    FirebaseSignOutUser();
+    dispatch(signout());
+    dispatch(apiSlice.util.resetApiState())
+  }
 
   function renderMenuSection() {
     if (isAuthenticated) {
-      return <Text>You are in!</Text>;
+      return <Menu>
+        <Menu.Target>
+          <Button variant="subtle">{auth.name}</Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item>My Projects</Menu.Item>
+          <Menu.Item>My Issues</Menu.Item>
+          <Menu.Item onClick={handleSignout}>Sign out</Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
     }
     return (
       <>

@@ -1,10 +1,12 @@
 import { apiSlice } from '@/store/apiSlice';
 
+export type ProjectRole = 'OWNER' | 'ADMIN' | 'USER';
+
 export type Project = {
   name: string;
   code: string;
   description: string;
-  role: string;
+  role: ProjectRole;
 };
 
 export type CreateProjectPayload = {
