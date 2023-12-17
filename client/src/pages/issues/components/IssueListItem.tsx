@@ -15,8 +15,8 @@ export function IssueListItem({ issue }: IssueListItemProps) {
       <Group justify="space-between">
         <Group>
           <IssueTypeBadge type={issue.type} />
-          <Text fw="bold">{issue.code}</Text>
-          <Text>{issue.summary}</Text>
+          <Text fw="bold" size="sm">{issue.code}</Text>
+          <Text size="sm">{issue.summary}</Text>
         </Group>
         <Group>
           <IssueStatusBadge status={issue.status} />

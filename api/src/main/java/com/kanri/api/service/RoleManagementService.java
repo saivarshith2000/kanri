@@ -71,7 +71,7 @@ public class RoleManagementService {
 
         RoleAssignment saved = roleAssignmentRepository.save(new RoleAssignment(user, project, dto.getRole()));
         log.info("Added user {} to project {} with role {}", user.getUid(), projectCode, saved.getRole());
-        return new RoleAssignmentResponse(user.getUid(), user.getEmail(), projectCode, saved.getRole());
+        return new RoleAssignmentResponse(user.getUid(), user.getEmail(), user.getDisplayName(),projectCode, saved.getRole());
     }
 
     /**
@@ -103,7 +103,7 @@ public class RoleManagementService {
         assignment.setRole(dto.getRole());
         roleAssignmentRepository.save(assignment);
         log.info("Modified user {} role in project {} from {} to {}", user.getUid(), projectCode, previousRole, assignment.getRole());
-        return new RoleAssignmentResponse(user.getUid(), user.getEmail(), projectCode, assignment.getRole());
+        return new RoleAssignmentResponse(user.getUid(), user.getEmail(), user.getDisplayName(), projectCode, assignment.getRole());
     }
 
     public void removeUserFromProject(String initiatorUid, String projectCode, String userUid) {

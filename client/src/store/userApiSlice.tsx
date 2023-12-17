@@ -2,7 +2,7 @@ import { apiSlice } from '@/store/apiSlice';
 
 export type User = {
   email: string;
-  displayName: string;
+  display_name: string;
 };
 
 const extendedApi = apiSlice

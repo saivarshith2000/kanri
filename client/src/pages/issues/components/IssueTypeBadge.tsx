@@ -2,7 +2,7 @@ import { Badge } from '@mantine/core';
 import { IssueType } from '../store/issuesApiSlice';
 
 const colorMap = {
-  EPIC: 'pink',
+  EPIC: 'grape',
   DEFECT: 'red',
   STORY: 'blue',
   TASK: 'gray',

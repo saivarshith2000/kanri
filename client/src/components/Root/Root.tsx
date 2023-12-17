@@ -51,7 +51,7 @@ export function Root() {
   return (
     <AppShell header={{ height: '80px' }}>
       <AppShell.Header>
-        <Flex justify="space-between" w={{ base: '100%', md: '75%' }} m="auto">
+        <Flex justify="space-between" w={{ base: '95%', md: '75%' }} m="auto">
           <Link to="/" style={{ textDecoration: 'none' }}>
             <Text
               variant="gradient"

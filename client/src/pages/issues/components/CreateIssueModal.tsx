@@ -1,9 +1,11 @@
 import { useDisclosure } from "@mantine/hooks";
-import { CreateIssuePayload, useCreateIssueMutation } from "../store/issuesApiSlice";
+import { CreateIssuePayload, useCreateIssueMutation, useGetEpicsQuery } from "../store/issuesApiSlice";
 import { notifications } from "@mantine/notifications";
 import { isApiError } from "@/store/apiError";
-import { Button, Modal } from "@mantine/core";
+import { Button, Loader, Modal } from "@mantine/core";
 import { CreateIssueForm } from "./CreateIssueForm";
+import { useGetUsersQuery } from "@/store/userApiSlice";
+import ErrorPage from "@/pages/ErrorPage/ErrorPage";
 
 export type CreateIssueModalType = {
     projectCode: string;
@@ -12,12 +14,18 @@ export type CreateIssueModalType = {
 export function CreateIssueModal({ projectCode }: CreateIssueModalType) {
     const [opened, { open, close }] = useDisclosure(false);
     const [createIssue, { isLoading }] = useCreateIssueMutation();
+    const { data: users, isLoading: isUsersLoading, error: usersError } = useGetUsersQuery(projectCode);
+    const {
+        data: epics,
+        isLoading: isEpicsLoading,
+        error: epicsError,
+    } = useGetEpicsQuery(projectCode);
 
     async function handleCreateIssue(values: CreateIssuePayload) {
         try {
-            await createIssue(values).unwrap();
+            const { code } = await createIssue(values).unwrap();
             notifications.show({
-                message: 'Issue <ISSUE-CODE> created successfully',     // todo: replace issue code here
+                message: `Issue ${code} created successfully`,
                 color: 'green',
                 autoClose: 2000,
             });
@@ -35,10 +43,29 @@ export function CreateIssueModal({ projectCode }: CreateIssueModalType) {
         }
     }
 
+    if (isUsersLoading || isEpicsLoading) {
+        return <Loader />
+    }
+
+    if (users === undefined || epics === undefined) {
+        notifications.show({
+            message: "An error occured while fetching project details. Please try again later.",
+            color: "red",
+            withCloseButton: true
+        })
+        return <ErrorPage />
+    }
+
     return (
         <>
-            <Modal opened={opened} onClose={close} title="Create Issue" centered>
-                <CreateIssueForm isLoading={isLoading} handleCreateIssue={handleCreateIssue} projectCode={projectCode} />
+            <Modal opened={opened} onClose={close} title="Create Issue" centered size="50%">
+                <CreateIssueForm
+                    isLoading={isLoading}
+                    handleCreateIssue={handleCreateIssue}
+                    projectCode={projectCode}
+                    users={users}
+                    epics={epics}
+                />
             </Modal>
             <Button onClick={open} variant="filled" size="sm">
                 New Issue

@@ -22,7 +22,7 @@ public interface RoleAssignmentRepository extends JpaRepository<RoleAssignment, 
     @Query("SELECT ra FROM RoleAssignment ra WHERE ra.account.uid = :uid and ra.project.code = :projectCode")
     Optional<RoleAssignment> findByUidAndProjectCode(@Param("uid") String uid, @Param("projectCode") String projectCode);
 
-    @Query("SELECT new com.kanri.api.dto.project.RoleAssignmentResponse(ra.account.uid, ra.account.email, ra.project.code, ra.role)" +
+    @Query("SELECT new com.kanri.api.dto.project.RoleAssignmentResponse(ra.account.uid, ra.account.email, ra.account.displayName, ra.project.code, ra.role)" +
             " FROM RoleAssignment ra WHERE ra.project.code = :code")
     List<RoleAssignmentResponse> findByProjectCode(@Param("code") String code);
 }

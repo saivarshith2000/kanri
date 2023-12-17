@@ -31,7 +31,7 @@ export function Issues() {
     );
   } else {
     return (
-      <Stack w="75%" m="auto" mt={16} gap={16}>
+      <Stack w={{ sm: "95%", md: "75%" }} m="auto" mt={16} gap={16}>
         <Group justify='space-between' align='center'>
           <Text size='24px' c="blue">{projectCode}</Text>
           <CreateIssueModal projectCode={projectCode} />
