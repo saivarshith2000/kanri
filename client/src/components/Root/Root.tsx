@@ -4,7 +4,7 @@ import classes from './Root.module.css';
 import { Link } from 'react-router-dom';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import { authSelector, isAuthenticatedSelector, signout } from '@/pages/signin/store';
-import { apiSlice } from "@/store/apiSlice";
+import { apiSlice } from '@/store/apiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { FirebaseSignOutUser } from '@/firebase';
 
@@ -16,21 +16,25 @@ export function Root() {
   function handleSignout() {
     FirebaseSignOutUser();
     dispatch(signout());
-    dispatch(apiSlice.util.resetApiState())
+    dispatch(apiSlice.util.resetApiState());
   }
 
   function renderMenuSection() {
     if (isAuthenticated) {
-      return <Menu>
-        <Menu.Target>
-          <Button variant="subtle">{auth.name}</Button>
-        </Menu.Target>
-        <Menu.Dropdown>
-          <Menu.Item>My Projects</Menu.Item>
-          <Menu.Item>My Issues</Menu.Item>
-          <Menu.Item onClick={handleSignout}>Sign out</Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+      return (
+        <Menu>
+          <Menu.Target>
+            <Button variant="subtle">{auth.name}</Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Link to="/projects" style={{ textDecoration: 'none' }}>
+              <Menu.Item>My Projects</Menu.Item>
+            </Link>
+            <Menu.Item>My Issues</Menu.Item>
+            <Menu.Item onClick={handleSignout}>Sign out</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      );
     }
     return (
       <>
@@ -67,6 +71,6 @@ export function Root() {
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
-    </AppShell >
+    </AppShell>
   );
 }

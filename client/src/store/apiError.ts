@@ -8,9 +8,9 @@ export type apiError = {
 
 export function isApiError(error: unknown): error is apiError {
   return (
-    typeof error === "object" &&
+    typeof error === 'object' &&
     error != null &&
-    "status" in error &&
-    typeof (error as any).status === "number"
+    'status' in error &&
+    typeof (error as any).status === 'number'
   );
 }

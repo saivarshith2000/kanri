@@ -9,25 +9,28 @@ import { Projects } from './pages/projects/components/Projects';
 import { FirebaseAuthWrapper } from './components/FirebaseAuthWrapper/FirebaseAuthWrapper';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import { Issues } from './pages/issues/Issues';
+import { IssueDetails } from './pages/IssueDetails/IssueDetails';
 
 export function Router() {
-  return <BrowserRouter>
-    <Routes>
-      <Route element={<FirebaseAuthWrapper />}>
-        <Route element={<Root />}>
-          <Route element={<PublicRoute />}>
-            <Route path="/" element={<Landing />} />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/signup" element={<Signup />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<FirebaseAuthWrapper />}>
+          <Route element={<Root />}>
+            <Route element={<PublicRoute />}>
+              <Route path="/" element={<Landing />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/signup" element={<Signup />} />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:projectCode/issues" element={<Issues />} />
+              <Route path="/projects/:projectCode/issues/:issueCode" element={<IssueDetails />} />
+            </Route>
+            <Route path="*" element={<ErrorPage />} />
           </Route>
-          <Route element={<ProtectedRoute />}>
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:projectCode/issues" element={<Issues />} />
-          </Route>
-          <Route path="*" element={<ErrorPage />} />
         </Route>
-      </Route>
-
-    </Routes>
-  </BrowserRouter>
+      </Routes>
+    </BrowserRouter>
+  );
 }

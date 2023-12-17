@@ -1,4 +1,4 @@
-import { apiSlice } from "@/store/apiSlice";
+import { apiSlice } from '@/store/apiSlice';
 
 export type User = {
   email: string;
@@ -7,7 +7,7 @@ export type User = {
 
 const extendedApi = apiSlice
   .enhanceEndpoints({
-    addTagTypes: ["user"],
+    addTagTypes: ['user'],
   })
   .injectEndpoints({
     endpoints: (builder) => ({
@@ -15,7 +15,7 @@ const extendedApi = apiSlice
         query: (projectCode: string) => ({
           url: `/api/projects/${projectCode}/users`,
         }),
-        providesTags: ["user"],
+        providesTags: ['user'],
       }),
     }),
     overrideExisting: false,

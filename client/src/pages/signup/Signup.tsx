@@ -41,7 +41,7 @@ export function Signup() {
 
   return (
     <>
-      <Paper mx="auto" shadow="xs" radius="md" maw={{ sm: '80%', md: '40%' }} p="xl" mt="100px">
+      <Paper mx="auto" shadow="xs" radius="md" maw={{ sm: '80%', md: '30%' }} p="xl" mt={{ sm: "10px", md: "100px" }}>
         <Text size="32px" fw="bold" ta="center">
           Sign Up
         </Text>
